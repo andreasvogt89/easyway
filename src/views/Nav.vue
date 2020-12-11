@@ -3,27 +3,30 @@
      <v-overlay
       :value="alertLogout"
       :opacity="1"
-    > 
-    <div class="pa-2">
-    <h1 >Wirklich Ausloggen ?</h1>
-    <br>
-    </div>
+    >
+    <v-container> 
+    <v-card>
+    <v-card-title 
+    class="ma-5px"
+    >Wirklich Ausloggen ?</v-card-title>
+    <v-card-text>
       <v-btn
-        class="white--text pa-10"
-        color="teal"
-        @click="alertLogout = false"
-        icon
-      >
-         <v-icon large>mdi-close</v-icon>
-      </v-btn>
-      <v-btn
-        class="white--text pa-10"
-        color="teal"
+        class="ma-5px"
         @click="logout"
-        icon
+        elevation="2"
       >
-         <v-icon large>mdi-check</v-icon>
+      <v-icon large>mdi-check</v-icon>
       </v-btn>
+      <v-btn
+        @click="alertLogout = false"
+        class="ma-5px"
+        elevation="2"
+      >
+      <v-icon large>mdi-close</v-icon>
+      </v-btn>
+      </v-card-text>
+    </v-card>
+    </v-container>
     </v-overlay>
     <v-card class="overflow-hidden">
         <v-app-bar
@@ -33,23 +36,18 @@
         prominent
         fade-img-on-scroll
         scroll-target="#scrolling-techniques-3"
+        :disabled="this.$store.getters.loginState"
         >
-        
-            
         <v-toolbar-title>
         EASY WAY
         </v-toolbar-title>
-
+    
         <v-spacer></v-spacer>
-
-        <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-        </v-btn>
 
         <v-btn icon
         @click="alertLogout = true"
         >
-            <v-icon>mdi-account-arrow-left</v-icon>
+             <v-icon>mdi-export</v-icon>
         </v-btn>
 
         <v-btn icon>
@@ -60,7 +58,7 @@
             <v-tabs align-with-title>
             <v-tab @click="$router.replace({name: 'Home'})" >Events</v-tab>
             <v-tab @click="$router.replace({name: 'Calendar'})" >Kalender</v-tab>
-            <v-tab>Personen</v-tab>
+            <v-tab @click="$router.replace({name: 'Persons'})">Personen</v-tab>
             <v-tab @click="$router.replace({name: 'About'})" >About</v-tab>
             </v-tabs>
         </template>
@@ -73,7 +71,7 @@
         <v-container class="ma-10" style="height: 14em;"></v-container>
         </v-sheet>
     </v-card>
-  </div>
+</div>
 </template>
 <script>
   export default {
@@ -90,13 +88,6 @@
       this.alertLogout = false;
       this.$router.replace({name:'Login'});
     },
-     
   },
   }
 </script>
-<style scoped>
-.title{
-    height:50%;
-    width: 50%;
-}
-</style>

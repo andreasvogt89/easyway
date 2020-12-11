@@ -1,8 +1,21 @@
 <template>
   <div id="app">
-    <Nav></Nav>
+    <Nav v-if="this.$store.getters.loginState" />
     <Login v-if="!this.$store.getters.loginState" />
-    <router-view v-if="this.$store.getters.loginState" />
+    <router-view
+     v-if="this.$store.getters.loginState" />
+    <footer
+    fixed="true"
+    v-if="this.$store.getters.loginState"
+    >
+    <v-col
+      class="text-end"
+      cols="12"
+    >Angemeldet als: 
+      <strong>{{this.$store.getters.getUsername}}</strong>, 
+      {{this.$store.getters.getUserRole}}
+      </v-col>
+    </footer>
   </div>
 </template>
 <script>
@@ -25,6 +38,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  
 }
 body{
   background-color: rgb(24, 26, 31);

@@ -20,9 +20,14 @@
     </div>
   </form>
     <div class="pad">
-    <button type="button" class="button" :loading ="loginActive"
-            :disabled="loginActive" v-on:click="executeLogin()"> GO!
-    </button>
+    <v-btn class="button" 
+          :loading ="loginActive"
+          :disabled="loginActive" 
+          v-on:click="executeLogin()"
+          icon
+          >
+      <v-icon>mdi-login</v-icon>
+    </v-btn>
       <div class="message">
       <p>
       {{input.message}}
@@ -82,7 +87,7 @@ export default {
   border: 2px solid #D12662;
   border-radius: 0.1em;
   font-size: 40px;
-  padding: 1px 20px 1px 20px;
+  padding: 20px 50px 20px 50px;
   transition-duration: 0.4s;
 }
 .button:hover {
@@ -111,7 +116,7 @@ export default {
   height: 200%;
   width: 200%;
   z-index: -1;
-  animation:rot 25s 0ms linear infinite;
+  animation:rot 120s 0ms linear infinite;
 }
 input[type=text] {
   box-sizing: border-box;

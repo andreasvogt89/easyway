@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Events from '../views/Events.vue'
 import Login from '../views/Login.vue'
 import Calendar from '../views/Calendar.vue'
-
+import Persons from '../views/Persons.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -15,6 +15,11 @@ const routes = [{
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/persons',
+        name: 'Persons',
+        component: Persons
     },
     {
         path: '/calendar',
