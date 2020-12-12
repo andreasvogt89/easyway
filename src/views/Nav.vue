@@ -8,18 +8,18 @@
     <v-card>
     <v-card-title 
     class="ma-5px"
-    >Wirklich Ausloggen ?</v-card-title>
+    >Du willst gehen 😱?</v-card-title>
     <v-card-text>
       <v-btn
-        class="ma-5px"
+        class="logoutButton"
         @click="logout"
         elevation="2"
       >
       <v-icon large>mdi-check</v-icon>
       </v-btn>
       <v-btn
+        class="logoutButton"
         @click="alertLogout = false"
-        class="ma-5px"
         elevation="2"
       >
       <v-icon large>mdi-close</v-icon>
@@ -43,7 +43,6 @@
         </v-toolbar-title>
     
         <v-spacer></v-spacer>
-
         <v-btn icon
         @click="alertLogout = true"
         >
@@ -56,7 +55,7 @@
 
         <template v-slot:extension>
             <v-tabs align-with-title>
-            <v-tab @click="$router.replace({name: 'Home'})" >Events</v-tab>
+            <v-tab @click="$router.replace({name: 'Events'})" >Events</v-tab>
             <v-tab @click="$router.replace({name: 'Calendar'})" >Kalender</v-tab>
             <v-tab @click="$router.replace({name: 'Persons'})">Personen</v-tab>
             <v-tab @click="$router.replace({name: 'About'})" >About</v-tab>
@@ -91,3 +90,8 @@
   },
   }
 </script>
+<style scoped>
+.logoutButton{
+  margin: 20px;
+}
+</style>

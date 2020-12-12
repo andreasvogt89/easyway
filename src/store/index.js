@@ -36,13 +36,19 @@ export default new Vuex.Store({
     },
     actions: {
         async login({ commit }, user) {
+
             await REST_interface.login(user)
                 .then(res => {
-                    sessionStorage.setItem('EAtoken', res.accessToken)
+                    sessionStorage.setItem('EAtoken', res.accessToken);
+                    localStorage.setItem('username', res.user[0].username);
+                    localStorage.setItem('role', res.user[0].role);
                     commit('setUser', res.user[0]);
                 }).catch(err => {
                     commit('error', err);
                 });
+        },
+        async reLogin({ commit }, user) {
+            commit('setUser', user);
         },
         logout({ commit }) {
             commit('removeUser');
@@ -63,7 +69,6 @@ export default new Vuex.Store({
     },
     getters: {
         loginState: state => {
-            console.log(state.login.isLoggedIn)
             return state.login.isLoggedIn;
         },
         getUsername: state => {

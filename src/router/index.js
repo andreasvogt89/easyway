@@ -7,7 +7,7 @@ import Persons from '../views/Persons.vue'
 Vue.use(VueRouter)
 
 const routes = [{
-        path: '/',
+        path: '/events',
         name: 'Events',
         component: Events
     },

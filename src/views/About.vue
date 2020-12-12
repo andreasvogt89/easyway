@@ -1,8 +1,15 @@
 <template>
+<div>
+ <v-card
+
+    color="primary"
+  >
   <div class="about">
     <h1>Listen you sonofabitch</h1>
     <h3>This is the ultimate high to the top shit eksöl</h3>
     <img src="https://media.giphy.com/media/uxXNV3Xa7QqME/source.gif">
+  </div>
+  </v-card>
   </div>
 </template>
 <style scoped>
