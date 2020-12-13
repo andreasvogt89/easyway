@@ -59,7 +59,7 @@ export default {
         if(this.$store.getters.loginState){
           await this.$router.replace({name: 'Events'});
         } else {
-          sessionStorage.removeItem('EAtoken');
+          localStorage.removeItem('user');
           this.input.message = "That's wrong 🙄... try again 🙂"
         }
          this.loginActive = false;

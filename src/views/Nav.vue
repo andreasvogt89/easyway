@@ -8,7 +8,7 @@
     <v-card>
     <v-card-title 
     class="ma-5px"
-    >Du willst gehen 😱?</v-card-title>
+    >Willst du dich verpissen 😱?</v-card-title>
     <v-card-text>
       <v-btn
         class="logoutButton"
@@ -83,7 +83,6 @@
     logout(){
       sessionStorage.removeItem('EAtoken');
       this.$store.dispatch('logout');
-      console.log("By Token 👋");
       this.alertLogout = false;
       this.$router.replace({name:'Login'});
     },

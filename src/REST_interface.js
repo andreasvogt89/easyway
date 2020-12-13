@@ -29,7 +29,7 @@ class REST_interface {
                 headers: {
                     'Collection': collectionName,
                     'Authorization': "Bearer " +
-                        sessionStorage.getItem('EAtoken'),
+                        JSON.parse(localStorage.getItem('user')).accessToken,
                 },
             }).then((res) => {
                 resolve(
@@ -45,7 +45,7 @@ class REST_interface {
                 headers: {
                     'Collection': collectionName,
                     'Authorization': "Bearer " +
-                        sessionStorage.getItem('EAtoken'),
+                        JSON.parse(localStorage.getItem('user')).accessToken,
                 },
             }).then((res) => {
                 resolve(
@@ -61,7 +61,7 @@ class REST_interface {
                 headers: {
                     'Collection': collectionName,
                     'Authorization': "Bearer " +
-                        sessionStorage.getItem('EAtoken'),
+                        JSON.parse(localStorage.getItem('user')).accessToken,
                 },
             }).then((res) => {
                 resolve(
@@ -77,7 +77,7 @@ class REST_interface {
                     headers: {
                         'Collection': collectionName,
                         'Authorization': "Bearer " +
-                            sessionStorage.getItem('EAtoken'),
+                            JSON.parse(localStorage.getItem('user')).accessToken,
                     }
 
                 }).then((res) => {
@@ -95,7 +95,7 @@ class REST_interface {
                 responseType: 'arraybuffer',
                 headers: {
                     'Authorization': "Bearer " +
-                        sessionStorage.getItem('EAtoken'),
+                        JSON.parse(localStorage.getItem('user')).accessToken,
                 },
 
             }).then((res) => {

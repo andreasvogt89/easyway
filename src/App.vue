@@ -1,5 +1,15 @@
 <template>
   <div id="app">
+    <v-overlay
+        :value="loginActive"
+    >
+      <v-progress-circular
+          size="200"
+          indeterminate
+      > Wart hurti..
+
+      </v-progress-circular>
+    </v-overlay>
     <Nav v-if="this.$store.getters.loginState" />
     <Login v-if="!this.$store.getters.loginState" />
     <router-view v-if="this.$store.getters.loginState" />
@@ -39,6 +49,7 @@
       </v-col>
     </v-row>
     </v-footer>
+    
   </div>
 </template>
 <script>
@@ -51,22 +62,30 @@ export default {
     Nav,
     Login
   },
+  data () {
+      return {
+        loginActive : false,
+      }
+    },
   async created(){
        this.loginActive = true;
-      
-       if(localStorage.getItem('username') !== null){
-        await this.$store.dispatch('reLogin', {
-          username: localStorage.getItem('username'),
-          role: localStorage.getItem('role')
-        })
-        }
+       if(localStorage.getItem('user') !== null){ 
+        let user = JSON.parse(localStorage.getItem('user'));
+        await this.$store.dispatch('reLogin', user.user[0]);
+        await this.$store.dispatch('fetchEvents');
         if(this.$store.getters.loginState){
-          await this.$router.replace({name: 'Events'});
+          this.loginActive = false;
         } else {
-          localStorage.removeItem('EAtoken');
+          localStorage.removeItem('user');
           await this.$router.replace({name: 'Login'});
+          this.loginActive = false;
         }
-         this.loginActive = false;
+        } else{
+          localStorage.removeItem('user');
+          await this.$router.replace({name: 'Login'});
+          this.loginActive = false;
+        }
+
   }
 }
 </script>
@@ -77,10 +96,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  
+
 }
 body{
-  background-color: rgb(24, 26, 31);
+  background-color: #181A1F;
   margin: 0;
   padding: 0;
 }

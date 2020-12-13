@@ -12,7 +12,7 @@ export default new Vuex.Store({
             username: "",
             role: "",
         },
-        data: [],
+        events: [],
         error: "",
         backend: "",
     },
@@ -33,15 +33,15 @@ export default new Vuex.Store({
         backend(state, data) {
             state.backend = data
         },
+        setEvents(state, events) {
+            state.events = events
+        }
     },
     actions: {
         async login({ commit }, user) {
-
             await REST_interface.login(user)
                 .then(res => {
-                    sessionStorage.setItem('EAtoken', res.accessToken);
-                    localStorage.setItem('username', res.user[0].username);
-                    localStorage.setItem('role', res.user[0].role);
+                    localStorage.setItem('user', JSON.stringify(res));
                     commit('setUser', res.user[0]);
                 }).catch(err => {
                     commit('error', err);
@@ -52,6 +52,17 @@ export default new Vuex.Store({
         },
         logout({ commit }) {
             commit('removeUser');
+            localStorage.removeItem('user');
+        },
+        async fetchEvents({ commit }) {
+            await REST_interface.getCollection("events")
+                .then(res => {
+                    commit('setEvents', res);
+                }).catch(err => {
+                    commit('removeUser');
+                    localStorage.removeItem('user');
+                    commit('error', err);
+                });
         },
         async backendState({ commit }) {
             await REST_interface.isBackendRunning()
@@ -76,6 +87,9 @@ export default new Vuex.Store({
         },
         getUserRole: state => {
             return state.login.role
+        },
+        getEvents: state => {
+            return state.events
         }
     },
 });
