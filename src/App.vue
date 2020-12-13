@@ -10,12 +10,12 @@
 
       </v-progress-circular>
     </v-overlay>
-    <Nav v-if="this.$store.getters.loginState" />
     <Login v-if="!this.$store.getters.loginState" />
+    <Nav v-if="this.$store.getters.loginState" />
     <router-view v-if="this.$store.getters.loginState" />
     <v-footer
       v-if="this.$store.getters.loginState"
-      color="primary"
+      color="#2c3e50"
     >
     <v-row
 
@@ -48,8 +48,7 @@
         </div>
       </v-col>
     </v-row>
-    </v-footer>
-    
+    </v-footer> 
   </div>
 </template>
 <script>
@@ -100,8 +99,7 @@ export default {
 }
 body{
   background-color: #181A1F;
-  margin: 0;
-  padding: 0;
+
 }
 .footerImage{
   height: 50px;

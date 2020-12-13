@@ -1,8 +1,8 @@
 <template>
-<div>
+<v-container>
  <v-card
-
-    color="primary"
+    class="ma-1"
+    color="#2c3e50"
   >
   <div class="about">
     <h1>Listen you sonofabitch</h1>
@@ -10,7 +10,7 @@
     <img src="https://media.giphy.com/media/uxXNV3Xa7QqME/source.gif">
   </div>
   </v-card>
-  </div>
+  </v-container>
 </template>
 <style scoped>
 .about{
