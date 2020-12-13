@@ -1,6 +1,6 @@
 <template>
-<div>
-     <v-overlay
+    <v-card>
+      <v-overlay
       :value="alertLogout"
       :opacity="1"
     >
@@ -27,17 +27,10 @@
       </v-card-text>
     </v-card>
     </v-container>
-    </v-overlay>
-    <v-card class="overflow-hidden">
+      </v-overlay>
         <v-app-bar
-        absolute
         dark
-        shrink-on-scroll
-        prominent
-        fade-img-on-scroll
-        scroll-target="#scrolling-techniques-3"
-        :disabled="this.$store.getters.loginState"
-        >
+        prominent>
         <v-toolbar-title>
         EASY WAY
         </v-toolbar-title>
@@ -54,7 +47,7 @@
         </v-btn>
 
         <template v-slot:extension>
-            <v-tabs align-with-title>
+            <v-tabs align-with-title color="accent">
             <v-tab @click="$router.replace({name: 'Events'})" >Events</v-tab>
             <v-tab @click="$router.replace({name: 'Calendar'})" >Kalender</v-tab>
             <v-tab @click="$router.replace({name: 'Persons'})">Personen</v-tab>
@@ -62,15 +55,7 @@
             </v-tabs>
         </template>
         </v-app-bar>
-        <v-sheet
-        id="scrolling-techniques-3"
-        class="overflow-y-auto"
-        max-height="600"
-        >
-        <v-container class="ma-10" style="height: 14em;"></v-container>
-        </v-sheet>
     </v-card>
-</div>
 </template>
 <script>
   export default {

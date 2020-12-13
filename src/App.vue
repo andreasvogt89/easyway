@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <v-overlay
         :value="loginActive"
     >
@@ -15,26 +15,18 @@
     <router-view v-if="this.$store.getters.loginState" />
     <v-footer
       v-if="this.$store.getters.loginState"
-      color="#2c3e50"
+      color="secondary"
+      fixed
     >
     <v-row
 
     >
     <v-col
       cols="4"
+      class="text-left"
     >
-      <p
-      class="footerText">
-      Angemeldet als: <strong>{{this.$store.getters.getUsername}}</strong>
-      </p>
-      <p
-      class="footerText"> 
-        Gruppe: <strong>{{this.$store.getters.getUserRole}}</strong>
-      </p>
-      <p
-      class="footerText"> 
-        Version: <strong>0.0.1</strong>
-      </p>
+        Angemeldet als: <strong>{{this.$store.getters.getUsername}}</strong><br>
+        Gruppe: <strong>{{this.$store.getters.getUserRole}}</strong><br>
       </v-col>
       <v-col
       cols="6"
@@ -49,7 +41,7 @@
       </v-col>
     </v-row>
     </v-footer> 
-  </div>
+  </v-app>
 </template>
 <script>
 import Nav from "@/views/Nav.vue"
@@ -94,20 +86,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-
-}
-body{
   background-color: #181A1F;
 
 }
 .footerImage{
-  height: 50px;
-  width: 50px;
-}
-
-.footerText{
-  text-align: start;
-  padding-left: 1em;
+  height: 40px;
+  width: 40px;
 }
 </style>
