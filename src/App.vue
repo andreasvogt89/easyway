@@ -1,6 +1,7 @@
 <template>
   <v-app id="app">
     <v-overlay
+        v-if="this.$store.getters.loginState"
         :value="loginActive"
     >
       <v-progress-circular
@@ -86,8 +87,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+body{
   background-color: #181A1F;
-
 }
 .footerImage{
   height: 40px;

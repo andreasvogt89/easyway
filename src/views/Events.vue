@@ -25,7 +25,7 @@
       <template v-slot:item="props" >
          <EventCard :event="props.item" />
       </template>
-      <template v-slot:footer>
+      <template v-slot:footer >
         <v-toolbar
           dark
           class="mb-1"
@@ -36,64 +36,28 @@
         </v-toolbar>
       </template >
     </v-data-iterator>
-    <v-dialog
+      <v-dialog
           v-model="dialogNewEvent"
           max-width="500px"
         >
-      <v-card
-       color="secondary">
-        <v-card-title>Neues Event</v-card-title>
-        <v-form>
-          <v-text-field 
-          v-model="dialogEvent.name" 
-          outlined
-          class="ma-3"
-          label="Event Name"
-          ></v-text-field>
-          <v-date-picker 
-          v-model="dialogEvent.eventDate">
-          </v-date-picker>
-          <v-text-field 
-          v-model="dialogEvent.place" 
-          outlined
-          class="ma-3"
-          label="Wo?"
-          ></v-text-field>
-          <v-textarea 
-          value="dialogEvent.comments" 
-          outlined
-          class="ma-3"
-          label="Kommentar"
-          ></v-textarea>
-        </v-form>
-        <v-btn
-        elevation="2"
-        class="ma-2"
-        :loading="dialogSave"
-        @click="saveEvent()"
-      >
-      <v-icon large>mdi-check</v-icon>
-      </v-btn>
-      <v-btn
-        @click="dialogNewEvent = false"
-        elevation="2"
-        class="ma-2"
-      >
-      <v-icon large>mdi-close</v-icon>
-      </v-btn>
-      </v-card>
-    </v-dialog>
+      <EventDialog 
+      :dialogEvent="dialogEvent"
+      :editEvent="false" 
+      @close-dialog="dialogNewEvent = false" />
+      </v-dialog>
   </v-container>
 </template>
 
 <script>
 import EventCard from "@/components/EventCard.vue"
-import REST_interface from "@/REST_interface";
+import EventDialog from "@/components/EventDialog.vue"
+
 
 export default {
   name: 'Events',
   components: {
-    EventCard
+    EventCard,
+    EventDialog
   },
    data () {
       return {
@@ -106,8 +70,6 @@ export default {
           participants: [],
           comments:"",
         },
-        dialogSave: false,
-        item: {name:"Hallo"},
       }
   },
   created(){
@@ -117,17 +79,6 @@ export default {
     async initialize () {
         await this.$store.dispatch('fetchEvents');
     },
-    async saveEvent(){
-        this.dialogSave = true
-        await REST_interface.postToCollection("events",{event:this.dialogEvent}).then(resp=>{
-          console.log('Event adding status: ' + resp);
-          this.initialize();
-          this.dialogNewEvent = false;
-      }).catch(err=>{
-        alert("Failed to add event: " + err);
-      });
-      this.dialogSave = false
-    }
   },
   computed: {
       getStoredEvents () {
