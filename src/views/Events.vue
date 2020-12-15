@@ -1,5 +1,5 @@
 <template>
-   <v-container fluid>
+   <v-container>
     <v-data-iterator
       :items="getStoredEvents"
       :search="search"
@@ -20,21 +20,15 @@
             label="Suche"
           >
           </v-text-field>
+          <v-btn
+        @click="dialogNewEvent = true"
+        class="ma-10"
+        >Neues Event</v-btn>
         </v-toolbar>
       </template >
       <template v-slot:item="props" >
          <EventCard :event="props.item" />
       </template>
-      <template v-slot:footer >
-        <v-toolbar
-          dark
-          class="mb-1"
-        >
-        <v-btn
-        @click="dialogNewEvent = true"
-        >Neues Event</v-btn> 
-        </v-toolbar>
-      </template >
     </v-data-iterator>
       <v-dialog
           v-model="dialogNewEvent"
@@ -87,3 +81,5 @@ export default {
   }
 }
 </script>
+<style scoped>
+</style>

@@ -17,7 +17,7 @@
     <v-footer
       v-if="this.$store.getters.loginState"
       color="secondary"
-      fixed
+      padless
     >
     <v-row
 

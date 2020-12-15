@@ -42,6 +42,24 @@
       >
       <v-icon large>mdi-close</v-icon>
       </v-btn>
+      <v-alert
+      class="ma-2"
+      v-if="error != ''"
+      text
+      prominent
+      type="error"
+      icon="mdi-cloud-alert"
+    >
+      Somthing went wrong 😐 => error message: {{error}}
+       <v-btn
+            color="error"
+            class="ma-1"
+            outlined
+            @click="error = ''"
+          >
+            Okay
+          </v-btn>
+    </v-alert>
     </v-card>
 </template>
 <script>
@@ -55,6 +73,7 @@ export default {
         }, 
     data () {
       return {
+        error:"",
         dialogSave: false,
         event_ID:"",
         event: this.dialogEvent,
@@ -64,7 +83,6 @@ export default {
   },
   created(){
         if(this.toEdit){
-            console.log(this.event)
          this.event_ID = this.event._id;
          this.event = this.event.event;
          this.pickerDate = this.event.eventDate;
@@ -78,14 +96,27 @@ export default {
 
     async saveEvent(){
         this.dialogSave = true
-        await REST_interface.postToCollection("events",{event:this.dialogEvent}).then(resp=>{
-          console.log('Event adding status: ' + resp);
-          this.initialize();
-          this.closeDialog();
-      }).catch(err=>{
-        alert("Failed to add event: " + err);
-      });
-      this.dialogSave = false
+        if(this.toEdit){
+          await REST_interface.changeItemInCollection("events", this.event_ID, {event:this.event}).then(resp=>{
+                console.log('Event adding status: ' + resp);
+                this.initialize();
+                this.closeDialog();
+                this.dialogSave = false
+            }).catch(err=>{
+              this.error = err;
+              this.dialogSave = false
+            });
+        } else {
+          await REST_interface.postToCollection("events",{event:this.event}).then(resp=>{
+                console.log('Event adding status: ' + resp);
+                this.initialize();
+                this.closeDialog();
+                this.dialogSave = false
+            }).catch(err=>{
+              this.error = err;
+               this.dialogSave = false
+            });
+        }
     },
     closeDialog(){
         this.$emit('close-dialog');

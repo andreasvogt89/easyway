@@ -1,7 +1,10 @@
 <template>
     <v-card
     class="ma-10"
+    min-width="300px"
     color="secondary"
+    :loading="waitForApi"
+    :disabled="waitForApi"
     >
     <v-card-title
     class="blue-grey darken-4"
@@ -32,7 +35,9 @@
     <v-divider class="mx-4"></v-divider>
     <v-card-text outlined label="Kommentare" >{{event.event.comments}}</v-card-text>
     <v-divider class="ma-2"></v-divider>
-    <v-card-actions>
+    <v-card-actions
+    class="ma-1"
+    >
         <v-btn
         @click="dialogEditEvent = true"
         >
@@ -48,15 +53,11 @@
         </v-btn>
         <v-btn
         @click="downloadExcel(event._id)"
-        :loading="waitForAPI"
-        :disabled="waitForAPI"
         >
         <v-icon>mdi-file-excel-outline</v-icon>  
         </v-btn>
         <v-btn
         @click="deleteEvent(event._id)"
-        :loading="waitForAPI"
-        :disabled="waitForAPI"
         >
         <v-icon>mdi-delete</v-icon>  
         </v-btn>
