@@ -1,11 +1,13 @@
 <template>
 <div>
-<v-container color="primary">
-  <v-card>
+<v-container>
+  <v-card
+  class="secondary"
+  >
     <v-card-title>
       <v-text-field
-        v-model="search"
-        
+        color="secondary"
+        v-model="search" 
         append-icon="mdi-magnify"
         label="Search"
         single-line
@@ -13,6 +15,7 @@
       ></v-text-field>
     </v-card-title>
     <v-data-table
+      class="secondary"
       :headers="headers"
       :items="personList"
       :search="search"

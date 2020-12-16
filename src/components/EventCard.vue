@@ -57,7 +57,7 @@
         <v-icon>mdi-file-excel-outline</v-icon>  
         </v-btn>
         <v-btn
-        @click="deleteEvent(event._id)"
+        @click="dialogDeleteEvent = true"
         >
         <v-icon>mdi-delete</v-icon>  
         </v-btn>
@@ -70,7 +70,16 @@
       :dialogEvent="event"
       :editEvent="true" 
       @close-dialog="dialogEditEvent = false" />
-      </v-dialog>
+    </v-dialog>
+    <v-dialog
+          v-model="dialogDeleteEvent"
+        >
+        <DeleteItemDialog
+          :_id="event._id"
+          :collection="'events'"
+          @close-dialog=" dialogDeleteEvent = false"
+        />
+    </v-dialog>
     </v-card>
     
 </template>
@@ -78,40 +87,26 @@
 import REST_interface from "@/REST_interface";
 import moment from "moment";
 import EventDialog from "@/components/EventDialog.vue"
-
+import DeleteItemDialog from "@/components/DeleteItemDialog.vue"
 export default {
     name: 'EventCard',
     props:{event:Object},
     components: {
-    EventDialog
+    EventDialog,
+    DeleteItemDialog
   },
     data () {
       return {
-        waitForAPI: false,
+        waitForApi: false,
         dialogEditEvent: false,
+        dialogDeleteEvent: false,
         }
     },
     methods:{
-        async deleteEvent(event_ID) {
-        if (confirm('Are you sure you want to delete this?')) {
-        this.waitForAPI = true;
-        console.log(event_ID);
-        await REST_interface.deleteItemInCollection("events",event_ID).then(()=>{
-            this.$store.dispatch('fetchEvents');
-        }).catch(err=>{
-          alert('Event deleting failed: ' + err)
-          console.log('Event delete failed: ' + err);
-            });
-          } else {
-            alert("You're weak... weichbächer");
-            this.waitForAPI = false;
-            }
-        },
     parseDate(date){
          let newDate = new Date(date);
          return new moment(newDate).format('LL') + "\n";
       },
-
     async downloadExcel(event_ID){
         this.waitForAPI = true;
         await REST_interface.createExcel(event_ID).then(()=>{

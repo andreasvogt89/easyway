@@ -57,6 +57,13 @@ export default new Vuex.Store({
         async fetchEvents({ commit }) {
             await REST_interface.getCollection("events")
                 .then(res => {
+                    //get inner properties for search perpeses
+                    res.forEach(element => {
+                        element.name = element.event.name;
+                        element.eventDate = element.event.eventDate;
+                        element.place = element.event.place;
+                    });
+                    console.log(res);
                     commit('setEvents', res);
                 }).catch(err => {
                     commit('removeUser');
