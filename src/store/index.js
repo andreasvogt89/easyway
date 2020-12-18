@@ -13,6 +13,7 @@ export default new Vuex.Store({
             role: "",
         },
         events: [],
+        persons: [],
         error: "",
         backend: "",
     },
@@ -35,6 +36,9 @@ export default new Vuex.Store({
         },
         setEvents(state, events) {
             state.events = events
+        },
+        setPersons(state, persons) {
+            state.persons = persons
         }
     },
     actions: {
@@ -42,7 +46,7 @@ export default new Vuex.Store({
             await REST_interface.login(user)
                 .then(res => {
                     localStorage.setItem('user', JSON.stringify(res));
-                    commit('setUser', res.user[0]);
+                    commit('setUser', res.data.user[0]);
                 }).catch(err => {
                     commit('error', err);
                 });
@@ -58,23 +62,30 @@ export default new Vuex.Store({
             await REST_interface.getCollection("events")
                 .then(res => {
                     //get inner properties for search perpeses
-                    res.forEach(element => {
+                    res.data.forEach(element => {
                         element.name = element.event.name;
                         element.eventDate = element.event.eventDate;
                         element.place = element.event.place;
                     });
-                    console.log(res);
                     commit('setEvents', res);
                 }).catch(err => {
-                    commit('removeUser');
-                    localStorage.removeItem('user');
                     commit('error', err);
                 });
         },
+
+        async fetchPersons({ commit }) {
+            await REST_interface.getCollection("persons")
+                .then(res => {
+                    commit('setPersons', res.data.filter(item => item.person.firstname !== '#DUMMY'));
+                }).catch(err => {
+                    commit('error', err);
+                });
+        },
+
         async backendState({ commit }) {
             await REST_interface.isBackendRunning()
                 .then(res => {
-                    if (res.message instanceof String) {
+                    if (res.data.message instanceof String) {
                         commit('backend', true)
                     } else {
                         commit('backend', false)
@@ -97,6 +108,10 @@ export default new Vuex.Store({
         },
         getEvents: state => {
             return state.events
-        }
+        },
+        getPersons: state => {
+            return state.persons
+        },
+
     },
 });

@@ -7,7 +7,7 @@ class REST_interface {
         return new Promise(((resolve, reject) =>
             axios.get(host).then((res) => {
                 resolve(
-                    res.data
+                    res
                 );
             }).catch((err) => {
                 reject(err);
@@ -17,7 +17,7 @@ class REST_interface {
         return new Promise(((resolve, reject) =>
             axios.post(host + '/login', user).then((res) => {
                 resolve(
-                    res.data
+                    res
                 );
             }).catch((err) => {
                 reject(err);
@@ -33,7 +33,7 @@ class REST_interface {
                 },
             }).then((res) => {
                 resolve(
-                    res.data
+                    res
                 );
             }).catch((err) => {
                 reject(err);
@@ -49,7 +49,7 @@ class REST_interface {
                 },
             }).then((res) => {
                 resolve(
-                    res.data
+                    res
                 );
             }).catch((err) => {
                 reject(err);
@@ -65,7 +65,7 @@ class REST_interface {
                 },
             }).then((res) => {
                 resolve(
-                    res.data
+                    res
                 );
             }).catch((err) => {
                 reject(err);
@@ -82,7 +82,7 @@ class REST_interface {
 
                 }).then((res) => {
                     resolve(
-                        res.data
+                        res
                     );
                 }).catch((err) => {
                     reject(err);

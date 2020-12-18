@@ -21,7 +21,7 @@
           >
           </v-text-field>
           <v-btn
-        @click="dialogNewEvent = true"
+        @click="dialogEventActive = true"
         class="ma-10"
         >Neues Event</v-btn>
         </v-toolbar>
@@ -31,13 +31,13 @@
       </template>
     </v-data-iterator>
       <v-dialog
-          v-model="dialogNewEvent"
+          v-model="dialogEventActive"
           max-width="500px"
         >
       <EventDialog 
       :dialogEvent="dialogEvent"
       :editEvent="false" 
-      @close-dialog="dialogNewEvent = false" />
+      @close-dialog="dialogEventActive = false" />
       </v-dialog>
   </v-container>
 </template>
@@ -56,7 +56,7 @@ export default {
    data () {
       return {
         search: '',
-        dialogNewEvent: false,
+        dialogEventActive: false,
         dialogEvent:{
           eventDate: "",
           name: "",

@@ -10,8 +10,9 @@
           label="Event Name"
           ></v-text-field>
           <v-date-picker 
-          v-model="event.eventDate"
-          value="pickerDate"
+          locale="de-ch"
+          v-model="pickerdate"
+          value="prePickerDate"
           >
           </v-date-picker>
           <v-text-field 
@@ -78,15 +79,15 @@ export default {
         event_ID:"",
         event: this.dialogEvent,
         toEdit: this.editEvent,
-        pickerDate: undefined,
+        pickerdate:"",
+        prePickerDate:"",
       }
   },
   created(){
         if(this.toEdit){
          this.event_ID = this.event._id;
          this.event = this.event.event;
-         this.pickerDate = this.event.eventDate;
-         this.event.eventDate = "";
+         this.prePickerDate = this.event.eventDate;
       } 
   },
   methods: {
@@ -97,8 +98,9 @@ export default {
     async saveEvent(){
         this.dialogSave = true
         if(this.toEdit){
+          this.event.eventDate = this.pickerdate;
           await REST_interface.changeItemInCollection("events", this.event_ID, {event:this.event}).then(resp=>{
-                console.log('Event adding status: ' + resp);
+                console.log('Event changing status: ' + resp);
                 this.initialize();
                 this.closeDialog();
                 this.dialogSave = false
@@ -107,6 +109,7 @@ export default {
               this.dialogSave = false
             });
         } else {
+          this.event.eventDate = this.pickerdate;
           await REST_interface.postToCollection("events",{event:this.event}).then(resp=>{
                 console.log('Event adding status: ' + resp);
                 this.initialize();
