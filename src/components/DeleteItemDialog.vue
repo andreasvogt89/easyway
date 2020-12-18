@@ -62,7 +62,8 @@ export default {
  methods:{
     async deleteItem() {
         this.waitForAPI = true;
-        await REST_interface.deleteItemInCollection(this.collectionName,this.event_ID).then(()=>{
+        await REST_interface.deleteItemInCollection(this.collectionName,this.event_ID).then(resp=>{
+            console.log("Status deleting: "+ resp.statusText);
             this.$store.dispatch('fetchEvents');
             this.waitForAPI = false;
             this.closeDialog();

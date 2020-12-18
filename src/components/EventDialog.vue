@@ -100,7 +100,7 @@ export default {
         if(this.toEdit){
           this.event.eventDate = this.pickerdate;
           await REST_interface.changeItemInCollection("events", this.event_ID, {event:this.event}).then(resp=>{
-                console.log('Event changing status: ' + resp);
+                console.log('Event changing status: ' + resp.statusText);
                 this.initialize();
                 this.closeDialog();
                 this.dialogSave = false
@@ -111,7 +111,7 @@ export default {
         } else {
           this.event.eventDate = this.pickerdate;
           await REST_interface.postToCollection("events",{event:this.event}).then(resp=>{
-                console.log('Event adding status: ' + resp);
+                console.log('Event adding status: ' + resp.statusText);
                 this.initialize();
                 this.closeDialog();
                 this.dialogSave = false

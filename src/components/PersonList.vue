@@ -71,6 +71,7 @@
     </template>
     </v-data-table>
     <v-dialog
+          v-if="dialogPersonActive"
           v-model="dialogPersonActive"
           max-width="500px"
         >
@@ -79,13 +80,22 @@
       :editPerson="edit" 
       @close-dialog="dialogPersonActive = false" />
     </v-dialog>
+    <v-dialog
+          v-model="dialogDeletePerson"
+        >
+        <DeleteItemDialog
+          :_id="delete_ID"
+          :collection="'personss'"
+          @close-dialog=" dialogDeletePerson = false"
+        />
+    </v-dialog>
   </v-card>
 </v-container>
 </div>
 </template>
 
 <script>
-
+import DeleteItemDialog from "@/components/DeleteItemDialog.vue"
 import PersonDialog from "@/components/PersonDialog.vue"
 export default {
     name: 'PersonList',
@@ -99,17 +109,19 @@ export default {
         loading: false,
         dialogPersonActive: false,
         dialogPerson:{},
-        dialogDeleteItem: false,
+        dialogDeletePerson: false,
+        delete_ID: "",
         edit: false,
         event_ID: this._id,
         headers: [
           { text: 'Vorname', value: 'person.firstname' },
           { text: 'Nachname', value: 'person.lastname' },
-          { text: 'Strasse', value: 'person.street' },
           { text: 'Geschlecht', value: 'person.gender' },
           { text: 'Alter', value: 'person.age' },
+          { text: 'Strasse', value: 'person.street' },
           { text: 'Strassennummer', value: 'person.street_number' },
           { text: 'Wohnort', value: 'person.city' },
+          { text: 'Postleizahl', value: 'person.postcode' },
           { text: 'Kontaktnummer', value: 'person.phone' },
           { text: 'Notfallnummer', value: 'person.emergency_phone' },
           { text: 'Email', value: 'person.email' },
@@ -120,6 +132,7 @@ export default {
     },
     components:{
       PersonDialog,
+      DeleteItemDialog
     },
     created() {
     this.initialize();  
@@ -135,23 +148,22 @@ export default {
       },
 
       editPerson (item) {
-        this.dialogPerson = {};
         this.edit = true;
         this.dialogPerson = item; 
         this.dialogPersonActive = true;
       },
 
-      deletePerson () {
-        
+      deletePerson (item) {
+        this.dialogDeletePerson = true;
+        this.delete_ID = item._id;
       },
 
       newPerson(){
-        this.dialogPerson = {};
         this.edit = false;
-        this.dialogPersonActive = true;
         this.dialogPerson = {
           firstname:"",
         }
+        this.dialogPersonActive = true;
       }
     }
     

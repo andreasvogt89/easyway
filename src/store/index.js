@@ -45,7 +45,7 @@ export default new Vuex.Store({
         async login({ commit }, user) {
             await REST_interface.login(user)
                 .then(res => {
-                    localStorage.setItem('user', JSON.stringify(res));
+                    localStorage.setItem('user', JSON.stringify(res.data));
                     commit('setUser', res.data.user[0]);
                 }).catch(err => {
                     commit('error', err);
@@ -67,7 +67,7 @@ export default new Vuex.Store({
                         element.eventDate = element.event.eventDate;
                         element.place = element.event.place;
                     });
-                    commit('setEvents', res);
+                    commit('setEvents', res.data);
                 }).catch(err => {
                     commit('error', err);
                 });

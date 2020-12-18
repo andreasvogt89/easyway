@@ -1,16 +1,144 @@
 <template>
     <v-card
-       color="secondary">
+       color="secondary pa-3">
         <v-card-title>Neue Lappe</v-card-title>
         <v-form>
-            <v-text-field
-            v-model="person.firstname"
-            :rules="[() => !!person.firstname || 'Bitte Ausfüllen!']"
+            <v-row>
+            <v-col cols="12" sm="6">
+                <v-text-field
+                v-model="person.firstname"
+                :rules="[() => !!person.firstname || 'Bitte Ausfüllen!']"
+                outlined
+                placeholder="Vorname"
+                required
+            ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
+                <v-text-field
+                    v-model="person.lastname"
+                    :rules="[() => !!person.lastname || 'Bitte Ausfüllen!']"
+                    outlined
+                    placeholder="Nachname"
+                    required
+                ></v-text-field>
+            </v-col>
+            </v-row>
+            <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="pickerDate"
+                    label="Geburtstag"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+                </template>
+                <v-date-picker
+                ref="picker"
+                v-model="pickerDate"
+                :max="new Date().toISOString().substr(0, 10)"
+                min="1950-01-01"
+                @change="save"
+                ></v-date-picker>
+            </v-menu>
+          <div>
+           <v-btn
+           x-large 
+           id="female" 
+           @click="selectFemale()"
+           class="ma-3">
+            🚺
+          </v-btn>
+          <v-btn
+          x-large 
+          id="male" 
+          @click="selectMale()"
+          class="ma-3" >
+            🚹
+          </v-btn>
+          </div>
+          <v-row>
+            <v-col cols="12" sm="6">
+                <v-text-field
+                    v-model="person.phone"
+                    :rules="[rules.number, rules.numberLength]"
+                    outlined
+                    placeholder="Handy"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
+                <v-text-field
+                    v-model="person.emergency_phone"
+                    :rules="[rules.number, rules.numberLength]"
+                    outlined
+                    placeholder="Notfallnummer"
+                ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6">
+                <v-text-field
+                    outlined
+                    v-model="person.email"
+                    :rules="[rules.email]"
+                    placeholder="E-mail"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">         
+                <v-text-field
+                    v-model="person.class"
+                    outlined
+                    placeholder="Klasse"
+                ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-text-field
+            v-model="person.comments"
             outlined
-            placeholder="Vorname"
-            class="ma-10"
-            required
+            placeholder="Kommentar"
           ></v-text-field>
+        <v-row>
+         <v-col cols="12" sm="8">
+            <v-text-field
+                v-model="person.city"
+                outlined
+                placeholder="Ort"
+            ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-text-field
+            v-model="person.postcode"
+            outlined
+            :rules="[rules.number, rules.postcode]"
+            placeholder="Postleizahl"
+          ></v-text-field>
+        </v-col>
+        </v-row>
+        <v-row>
+         <v-col cols="12" sm="8">
+            <v-text-field
+                v-model="person.street"
+                outlined
+                placeholder="Strasse"
+            ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-text-field
+            v-model="person.street_number"
+            outlined
+            :rules="[rules.number, rules.postcode]"
+            placeholder="Nr."
+          ></v-text-field>
+        </v-col>
+        </v-row>
         </v-form>
         <v-btn
         elevation="2"
@@ -64,15 +192,31 @@ export default {
         person_ID:"",
         person: this.dialogPerson,
         toEdit: this.editPerson,
-        pickerDate: "",
-        prePickerDate: "",
+        menu: false,
+        pickerDate: null,
+        rules: {
+          required: value => !!value || 'Required.',
+          counter: value => value.length <= 20 || 'Max 20 characters',
+          number: v => Number.isInteger(Number(v)) || 'Bisch du blööd?😂',
+          numberLength: v => v.length >= 10 || 'chli churz ni ? ',
+          postcode: v => v.length <= 4 || 'chli läng, ni ? ',
+          email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Mail adresse bitte'
+          },
+        },
+
       }
   },
+  watch: {
+      menu (val) {
+        val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+      },
+    },
   created(){
         if(this.toEdit){
          this.person_ID = this.person._id;
          this.person = this.person.person;
-         //this.prePickerDate = this.event.eventDate;
       } 
       
   },
@@ -84,6 +228,8 @@ export default {
     async savePerson(){
         this.dialogSave = true
         if(this.toEdit){
+          this.person.birthdate = this.pickerdate;
+          this.person.age = this.calculateAge();
           await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
                 this.initialize();
@@ -94,6 +240,8 @@ export default {
               this.dialogSave = false
             });
         } else {
+          this.person.birthdate = this.pickerdate;
+          this.person.age = this.calculateAge();
           await REST_interface.postToCollection("persons",{person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
                 this.initialize();
@@ -107,6 +255,25 @@ export default {
     },
     closeDialog(){
         this.$emit('close-dialog');
+    },
+    selectMale(){
+      this.person.gender = 'M'
+      document.getElementById("male").style.backgroundColor = "#D12662";
+      document.getElementById("female").style.backgroundColor = "#181A1F";
+    },
+    selectFemale(){
+      this.person.gender = 'W'
+      document.getElementById("female").style.backgroundColor = "#D12662";
+      document.getElementById("male").style.backgroundColor = "#181A1F";
+    },
+    save (date) {
+        this.$refs.menu.save(date)
+      },
+
+    calculateAge() { 
+    var ageDifMs = Date.now() - new Date(this.pickerDate).getTime();
+    var ageDate = new Date(ageDifMs); 
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
   },
 }
