@@ -16,7 +16,7 @@
     <v-data-table
       class="secondary"
       :headers="headers"
-      :items="getStoredPersons"
+      :items="persons"
       :search="search"
       item-key="_id"
       :loading="loading"
@@ -85,7 +85,7 @@
         >
         <DeleteItemDialog
           :_id="delete_ID"
-          :collection="'personss'"
+          :collection="'persons'"
           @close-dialog=" dialogDeletePerson = false"
         />
     </v-dialog>
@@ -111,6 +111,7 @@ export default {
         dialogPerson:{},
         dialogDeletePerson: false,
         delete_ID: "",
+        persons:[],
         edit: false,
         event_ID: this._id,
         headers: [
@@ -118,6 +119,7 @@ export default {
           { text: 'Nachname', value: 'person.lastname' },
           { text: 'Geschlecht', value: 'person.gender' },
           { text: 'Alter', value: 'person.age' },
+          { text: 'Geburtstag', value: 'person.birthdate' },
           { text: 'Strasse', value: 'person.street' },
           { text: 'Strassennummer', value: 'person.street_number' },
           { text: 'Wohnort', value: 'person.city' },
@@ -135,7 +137,7 @@ export default {
       DeleteItemDialog
     },
     created() {
-    this.initialize();  
+      this.initialize();   
     },
     computed: {
       getStoredPersons () {
@@ -145,6 +147,11 @@ export default {
     methods: {
       async initialize (){
         await this.$store.dispatch('fetchPersons');
+        if(this.event_ID === "all"){
+          this.persons = this.getStoredPersons; 
+        }  else {
+          this.persons = this.getStoredPersons.filter(person => person.person.event === this.event_ID);
+        }
       },
 
       editPerson (item) {

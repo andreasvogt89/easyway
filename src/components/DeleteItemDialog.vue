@@ -64,12 +64,16 @@ export default {
         this.waitForAPI = true;
         await REST_interface.deleteItemInCollection(this.collectionName,this.event_ID).then(resp=>{
             console.log("Status deleting: "+ resp.statusText);
+            if(this.collectionName === "events"){
             this.$store.dispatch('fetchEvents');
+            } else{
+            this.$store.dispatch('fetchPersons');
+            }
             this.waitForAPI = false;
             this.closeDialog();
         }).catch(err=>{
           this.waitForAPI = false;
-          this.error = err
+          this.error = err;
             });
           },
     closeDialog(){

@@ -44,6 +44,7 @@
         <v-icon>mdi-calendar-edit</v-icon>  
         </v-btn>
         <v-btn
+        @click="dialogPersons = true"
         >
         <v-icon>mdi-account-plus-outline</v-icon>  
         </v-btn>
@@ -80,6 +81,14 @@
           @close-dialog=" dialogDeleteEvent = false"
         />
     </v-dialog>
+    <v-dialog
+          v-model="dialogPersons"
+        >
+        <PersonList
+          :_id="event._id"
+          @close-dialog=" dialogPersons = false"
+        />
+    </v-dialog>
     </v-card>
     
 </template>
@@ -88,18 +97,22 @@ import REST_interface from "@/REST_interface";
 import moment from "moment";
 import EventDialog from "@/components/EventDialog.vue"
 import DeleteItemDialog from "@/components/DeleteItemDialog.vue"
+import PersonList from "@/components/PersonList.vue"
+
 export default {
     name: 'EventCard',
     props:{event:Object},
     components: {
     EventDialog,
-    DeleteItemDialog
+    DeleteItemDialog,
+    PersonList
   },
     data () {
       return {
         waitForApi: false,
         dialogEditEvent: false,
         dialogDeleteEvent: false,
+        dialogPersons:false,
         }
     },
     methods:{
@@ -111,7 +124,6 @@ export default {
     async downloadExcel(event_ID){
         this.waitForAPI = true;
         await REST_interface.createExcel(event_ID).then(()=>{
-          console.log("done!");
           this.waitForAPI = false;
         }).catch(err=>{
           this.waitForAPI = false;
