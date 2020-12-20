@@ -78,9 +78,13 @@ export default {
       search: '',
       selected: [],
       items: [],
+      preSelect: this.events,
     }),
     created(){
         this.items = this.getEvents();
+        this.preSelect.forEach(item => {
+            this.selected.push(item);
+        });
     },
     computed: {
       allSelected () {

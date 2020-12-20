@@ -144,8 +144,7 @@
           ></v-text-field>
         </v-col>
         </v-row>
-        <EventPicker :v-bind="person.event" 
-        :events="person.event" />
+        <EventPicker :events="person.event" />
         </v-form>
         <v-btn
         elevation="2"
