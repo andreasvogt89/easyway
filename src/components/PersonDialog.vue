@@ -44,25 +44,30 @@
                 <v-date-picker
                 ref="picker"
                 v-model="pickerDate"
+                locale="de-ch"
                 :max="new Date().toISOString().substr(0, 10)"
                 min="1950-01-01"
+
                 @change="save"
                 ></v-date-picker>
             </v-menu>
           <div>
            <v-btn
            x-large 
-           id="female" 
-           @click="selectFemale()"
-           class="ma-3">
-            🚺
+           @click="person.gender = 'W'"
+           v-bind="person.gender"
+           :color="person.gender === 'W' ? 'accent' : 'primary'"
+           class="ma-3"
+           >
+            <v-icon>mdi-face-woman</v-icon>
           </v-btn>
           <v-btn
           x-large 
-          id="male" 
-          @click="selectMale()"
+          @click="person.gender = 'M'"
+           v-bind="person.gender"
+           :color="person.gender === 'M' ? 'accent' : 'primary'"
           class="ma-3" >
-            🚹
+            <v-icon>mdi-face</v-icon>
           </v-btn>
           </div>
           <v-row>
@@ -139,6 +144,8 @@
           ></v-text-field>
         </v-col>
         </v-row>
+        <EventPicker :v-bind="person.event" 
+        :events="person.event" />
         </v-form>
         <v-btn
         elevation="2"
@@ -177,23 +184,28 @@
 </template>
 <script>
 import REST_interface from "@/REST_interface";
-
+import EventPicker from "@/components/EventPicker.vue";
 
 export default {
     name: 'PersonDialog',
     props:{
         dialogPerson:Object,
         editPerson:Boolean,
-        }, 
+        preEventSelection:String,
+        },
+    components:{
+      EventPicker
+    }, 
     data () {
       return {
         error:"",
         dialogSave: false,
         person_ID:"",
+        event_ID: this.preEventSelection,
         person: this.dialogPerson,
         toEdit: this.editPerson,
         menu: false,
-        pickerDate: null,
+        pickerDate: "",
         rules: {
           required: value => !!value || 'Required.',
           counter: value => value.length <= 20 || 'Max 20 characters',
@@ -217,6 +229,11 @@ export default {
         if(this.toEdit){
          this.person_ID = this.person._id;
          this.person = this.person.person;
+         this.pickerDate = new Date(this.person.birthdate).toISOString().substr(0, 10);
+      } else{
+        if(this.event_ID !== undefined){
+        this.person.push(this.event_ID);
+        }
       } 
       
   },
@@ -224,11 +241,10 @@ export default {
     async initialize () {
         await this.$store.dispatch('fetchPersons');
     },
-
     async savePerson(){
         this.dialogSave = true
         if(this.toEdit){
-          this.person.birthdate = this.pickerdate;
+          this.person.birthdate = new Date(this.pickerDate);
           this.person.age = this.calculateAge();
           await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
@@ -240,7 +256,7 @@ export default {
               this.dialogSave = false
             });
         } else {
-          this.person.birthdate = this.pickerdate;
+          this.person.birthdate = new Date(this.pickerDate);
           this.person.age = this.calculateAge();
           await REST_interface.postToCollection("persons",{person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
@@ -256,25 +272,14 @@ export default {
     closeDialog(){
         this.$emit('close-dialog');
     },
-    selectMale(){
-      this.person.gender = 'M'
-      document.getElementById("male").style.backgroundColor = "#D12662";
-      document.getElementById("female").style.backgroundColor = "#181A1F";
-    },
-    selectFemale(){
-      this.person.gender = 'W'
-      document.getElementById("female").style.backgroundColor = "#D12662";
-      document.getElementById("male").style.backgroundColor = "#181A1F";
-    },
     save (date) {
         this.$refs.menu.save(date)
       },
-
     calculateAge() { 
     var ageDifMs = Date.now() - new Date(this.pickerDate).getTime();
     var ageDate = new Date(ageDifMs); 
     return Math.abs(ageDate.getUTCFullYear() - 1970);
-    }
+    },
   },
 }
 </script>

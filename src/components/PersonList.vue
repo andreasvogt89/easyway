@@ -16,7 +16,7 @@
     <v-data-table
       class="secondary"
       :headers="headers"
-      :items="persons"
+      :items="getStoredPersons"
       :search="search"
       item-key="_id"
       :loading="loading"
@@ -35,15 +35,6 @@
             >
               Neue Lappe
       </v-btn>
-      <v-btn
-              color="primary"
-              dark
-              v-if="event_ID !== 'all'"
-              class="ma-2"
-              @click="addExistingPerson()"
-            >
-              Add Lappe
-            </v-btn>
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
@@ -60,6 +51,9 @@
       >
         mdi-delete
       </v-icon>
+    </template>
+    <template v-slot:[`item.person.birthdate`]="{ item }">
+      {{parseDate(item.person.birthdate)}}
     </template>
     <template v-slot:no-data>
       <v-btn
@@ -95,25 +89,21 @@
 </template>
 
 <script>
-import DeleteItemDialog from "@/components/DeleteItemDialog.vue"
-import PersonDialog from "@/components/PersonDialog.vue"
+import DeleteItemDialog from "@/components/DeleteItemDialog.vue";
+import PersonDialog from "@/components/PersonDialog.vue";
+import moment from "moment";
+
 export default {
     name: 'PersonList',
-    props:{
-     _id:String,
-    },
     data () {
       return {
         search: '',
         error: false,
         loading: false,
         dialogPersonActive: false,
-        dialogPerson:{},
         dialogDeletePerson: false,
         delete_ID: "",
-        persons:[],
         edit: false,
-        event_ID: this._id,
         headers: [
           { text: 'Vorname', value: 'person.firstname' },
           { text: 'Nachname', value: 'person.lastname' },
@@ -147,11 +137,6 @@ export default {
     methods: {
       async initialize (){
         await this.$store.dispatch('fetchPersons');
-        if(this.event_ID === "all"){
-          this.persons = this.getStoredPersons; 
-        }  else {
-          this.persons = this.getStoredPersons.filter(person => person.person.event === this.event_ID);
-        }
       },
 
       editPerson (item) {
@@ -169,10 +154,28 @@ export default {
         this.edit = false;
         this.dialogPerson = {
           firstname:"",
+          lastname:"",
+          gender:"",
+          birthdate:"",
+          email:"",
+          phone:"",
+          emergency_phone:"",
+          class: "",
+          comments: "",
+          postcode: "",
+          street: "",
+          street_number: "",
+          city:"",
+          event:[],
         }
         this.dialogPersonActive = true;
-      }
+      },
+
+      parseDate(date){
+         let newDate = new Date(date);
+         moment.locale('de-ch')        
+         return new moment(newDate).format('LL');
+      },
     }
-    
 } 
 </script>

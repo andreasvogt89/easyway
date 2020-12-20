@@ -119,7 +119,7 @@ export default {
     parseDate(date){
          let newDate = new Date(date);
          moment.locale('de-ch')        
-         return new moment(newDate).format('LL') + "\n";
+         return new moment(newDate).format('LL');
       },
     async downloadExcel(event_ID){
         this.waitForAPI = true;

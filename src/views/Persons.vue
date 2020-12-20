@@ -1,7 +1,7 @@
 <template>
 <div>
 <v-container>
-  <PersonList :_id="'all'" />
+  <PersonList />
 </v-container>
 </div>
 </template>
