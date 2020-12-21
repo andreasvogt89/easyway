@@ -9,12 +9,6 @@
     >
       <v-toolbar-title>Event Picker</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        icon
-        @click="$refs.search.focus()"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
     </v-toolbar>
 
     <v-container class="py-0">
@@ -23,7 +17,7 @@
         justify="start"
       >
         <v-col
-          v-for="(selection, i) in selections"
+          v-for="(selection, i) in selected"
           :key="selection._id"
           class="shrink"
         >
@@ -31,7 +25,7 @@
             class="accent"
             :disabled="loading"
             close
-            @click:close="selected.splice(i, 1)"
+            @click:close="refreshSelectionEvents(selection, i)"
           >
             {{ selection.event.name }}
           </v-chip>
@@ -46,7 +40,7 @@
             v-model="search"
             full-width
             hide-details
-            label="Search"
+            label="Suchen.."
             single-line
           ></v-text-field>
         </v-col>
@@ -59,7 +53,7 @@
           v-if="!selected.includes(item)"
           :key="item._id"
           :disabled="loading"
-          @click="selected.push(item)"
+          @click="refreshSelectedEvents(item)"
         >
           <v-list-item-title v-text="item.event.name"></v-list-item-title>
           <v-list-item-subtitle v-text="parseDate(item.event.eventDate)" ></v-list-item-subtitle>
@@ -72,19 +66,19 @@
 import moment from "moment";
 export default {
     name: "EventPicker",
-    props:{events:Array},
-    data: () => ({
+    props:{
+      preEventSelection:Array
+      },
+    data () {
+      return {
       loading: false,
       search: '',
-      selected: [],
-      items: [],
-      preSelect: this.events,
-    }),
+      selected: this.preEventSelection,
+      items: []
+      }
+    },
     created(){
-        this.items = this.getEvents();
-        this.preSelect.forEach(item => {
-            this.selected.push(item);
-        });
+      this.initialize();
     },
     computed: {
       allSelected () {
@@ -98,13 +92,6 @@ export default {
           return text.indexOf(search) > -1
         })
       },
-      selections () {
-        const selections = []
-        for (const selection of this.selected) {
-          selections.push(selection)
-        }
-        return selections
-      },
     },
 
     watch: {
@@ -114,14 +101,35 @@ export default {
     },
 
     methods: {
-      getEvents(){
-          return this.$store.getters.getEvents
-      },
       parseDate(date){
          let newDate = new Date(date);
          moment.locale('de-ch')        
          return new moment(newDate).format('LL');
       },
+      pushEvents(){
+        this.$emit('push-events', this.selected);
+      },
+      refreshSelectedEvents(item){
+        this.selected.push(item);
+        this.pushEvents();
+        this.initialize();
+      },
+      refreshSelectionEvents(selection, i){
+        this.selected.splice(i,1);
+        this.pushEvents();
+        this.initialize();
+      },
+      initialize(){
+        this.items = [];
+        this.$store.getters.getEvents.forEach(element => {
+            if(this.selected.find(item => item._id === element._id))
+            {
+              console.log("yeeet!")
+            }else{
+              this.items.push(element)
+            }
+      });
+      }
     },
   }
 </script>

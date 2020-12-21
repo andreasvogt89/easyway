@@ -36,7 +36,6 @@
                     v-model="pickerDate"
                     label="Geburtstag"
                     prepend-icon="mdi-calendar"
-                    readonly
                     v-bind="attrs"
                     v-on="on"
                 ></v-text-field>
@@ -55,7 +54,6 @@
            <v-btn
            x-large 
            @click="person.gender = 'W'"
-           v-bind="person.gender"
            :color="person.gender === 'W' ? 'accent' : 'primary'"
            class="ma-3"
            >
@@ -64,7 +62,6 @@
           <v-btn
           x-large 
           @click="person.gender = 'M'"
-           v-bind="person.gender"
            :color="person.gender === 'M' ? 'accent' : 'primary'"
           class="ma-3" >
             <v-icon>mdi-face</v-icon>
@@ -144,7 +141,9 @@
           ></v-text-field>
         </v-col>
         </v-row>
-        <EventPicker :events="person.event" />
+        <EventPicker 
+        @push-events="setEvents($event)"
+        :preEventSelection="person.event"  />
         </v-form>
         <v-btn
         elevation="2"
@@ -279,6 +278,9 @@ export default {
     var ageDate = new Date(ageDifMs); 
     return Math.abs(ageDate.getUTCFullYear() - 1970);
     },
+    setEvents(selectedEvents){
+      this.person.event = selectedEvents;
+    }
   },
 }
 </script>
