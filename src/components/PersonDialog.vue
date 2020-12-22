@@ -280,7 +280,7 @@ export default {
     },
     setEvents(selectedEvents){
       this.person.event = selectedEvents;
-    }
+    },
   },
 }
 </script>

@@ -64,6 +64,8 @@
 </template>
 <script>
 import moment from "moment";
+
+
 export default {
     name: "EventPicker",
     props:{
@@ -72,6 +74,7 @@ export default {
     data () {
       return {
       loading: false,
+      err: '',
       search: '',
       selected: this.preEventSelection,
       items: []
@@ -82,7 +85,7 @@ export default {
     },
     computed: {
       allSelected () {
-        return this.selected.length === this.items.length
+        return this.items.length === 0
       },
       categories () { 
         const search = this.search.toLowerCase()
@@ -119,17 +122,17 @@ export default {
         this.pushEvents();
         this.initialize();
       },
-      initialize(){
+      async initialize(){
         this.items = [];
         this.$store.getters.getEvents.forEach(element => {
             if(this.selected.find(item => item._id === element._id))
             {
-              console.log("yeeet!")
+              console.log('yeeeiit!!');
             }else{
               this.items.push(element)
             }
-      });
-      }
+          });
+      },
     },
   }
 </script>
