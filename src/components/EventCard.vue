@@ -53,7 +53,7 @@
         <v-icon>mdi-account-multiple-outline</v-icon>  
         </v-btn>
         <v-btn
-        @click="downloadExcel(event._id)"
+        @click="downloadExcel(event)"
         >
         <v-icon>mdi-file-excel-outline</v-icon>  
         </v-btn>
@@ -121,9 +121,10 @@ export default {
          moment.locale('de-ch')        
          return new moment(newDate).format('LL');
       },
-    async downloadExcel(event_ID){
+    async downloadExcel(event){
         this.waitForAPI = true;
-        await REST_interface.createExcel(event_ID).then(()=>{
+        let fileName = event.name +'_'+ event.eventDate;
+        await REST_interface.createExcel(fileName ,event._id).then(()=>{
           this.waitForAPI = false;
         }).catch(err=>{
           this.waitForAPI = false;

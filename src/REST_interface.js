@@ -89,29 +89,29 @@ class REST_interface {
                 })))
         }
         // Get Excel sheet of all graphics
-    static createExcel(itemId) {
+    static createExcel(fileName, event_ID) {
         return new Promise(((resolve, reject) =>
-            axios.get(host + '/export/excel/' + itemId, {
+            axios.get(host + '/export/excel/' + event_ID, {
                 responseType: 'arraybuffer',
+                'filename': fileName,
                 headers: {
                     'Authorization': "Bearer " +
                         JSON.parse(localStorage.getItem('user')).accessToken,
                 },
-
             }).then((res) => {
                 resolve(
-                    this.forceFileDownload(res)
+                    this.forceFileDownload(res, fileName)
                 );
             }).catch((err) => {
                 reject(err);
             })))
     }
 
-    static forceFileDownload(response) {
+    static forceFileDownload(response, fileName) {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a')
         link.href = url
-        link.setAttribute('download', 'event.xlsx') //or any other extension
+        link.setAttribute('download', fileName + '.xlsx') //or any other extension
         document.body.appendChild(link)
         link.click()
     }
