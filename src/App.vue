@@ -78,7 +78,7 @@ export default {
           this.loginActive = false;
         }
 
-  }
+  },
 }
 </script>
 <style lang="scss">

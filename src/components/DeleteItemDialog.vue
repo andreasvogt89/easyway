@@ -66,7 +66,9 @@ export default {
             console.log("Status deleting: "+ resp.statusText);
             if(this.collectionName === "events"){
             this.$store.dispatch('fetchEvents');
+            this.$store.dispatch('fetchPersons');
             } else{
+            this.$store.dispatch('fetchEvents');
             this.$store.dispatch('fetchPersons');
             }
             this.waitForAPI = false;
@@ -77,6 +79,7 @@ export default {
             });
           },
     closeDialog(){
+
           this.$emit('close-dialog');
       }, 
           

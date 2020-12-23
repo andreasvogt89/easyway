@@ -9,12 +9,32 @@
           class="ma-3"
           label="Event Name"
           ></v-text-field>
-          <v-date-picker 
-          locale="de-ch"
-          v-model="pickerdate"
-          value="prePickerDate"
-          >
-          </v-date-picker>
+          <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    outlined
+                    class="ma-3"
+                    prepend-inner-icon="mdi-calendar"
+                    v-model="pickerDate"
+                    label="Datum YYYY-MM-DD"
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+                </template>
+                <v-date-picker
+                ref="picker"
+                v-model="pickerDate"
+                locale="de-ch"
+                @change="save"
+                ></v-date-picker>
+            </v-menu>
           <v-text-field 
           v-model="event.place" 
           outlined
@@ -79,15 +99,15 @@ export default {
         event_ID:"",
         event: this.dialogEvent,
         toEdit: this.editEvent,
-        pickerdate:"",
-        prePickerDate:"",
+        pickerDate:"",
+        menu: false,
       }
   },
   created(){
         if(this.toEdit){
          this.event_ID = this.event._id;
          this.event = this.event.event;
-         this.prePickerDate = this.event.eventDate;
+         this.pickerDate = new Date(this.event.eventDate).toISOString().substr(0, 10);
       } 
   },
   methods: {
@@ -98,7 +118,7 @@ export default {
     async saveEvent(){
         this.dialogSave = true
         if(this.toEdit){
-          this.event.eventDate = this.pickerdate;
+          this.event.eventDate = this.pickerDate;
           await REST_interface.changeItemInCollection("events", this.event_ID, {event:this.event}).then(resp=>{
                 console.log('Event changing status: ' + resp.statusText);
                 this.initialize();
@@ -109,7 +129,7 @@ export default {
               this.dialogSave = false
             });
         } else {
-          this.event.eventDate = this.pickerdate;
+          this.event.eventDate = this.pickerDate;
           await REST_interface.postToCollection("events",{event:this.event}).then(resp=>{
                 console.log('Event adding status: ' + resp.statusText);
                 this.initialize();
@@ -123,7 +143,10 @@ export default {
     },
     closeDialog(){
         this.$emit('close-dialog');
-    }
+    },
+    save (date) {
+        this.$refs.menu.save(date)
+      },
   },
 }
 </script>

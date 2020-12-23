@@ -4,10 +4,11 @@ import Events from '../views/Events.vue'
 import Login from '../views/Login.vue'
 import Calendar from '../views/Calendar.vue'
 import Persons from '../views/Persons.vue'
+
 Vue.use(VueRouter)
 
 const routes = [{
-        path: '/events',
+        path: '/',
         name: 'Events',
         component: Events
     },
@@ -39,7 +40,7 @@ const routes = [{
 
 const router = new VueRouter({
     mode: 'history',
-    base: process.env.BASE_URL,
+    base: '/',
     routes,
     scrollBehavior: (to, from, savedPosition) => {
         if (to.hash) return { selector: to.hash }

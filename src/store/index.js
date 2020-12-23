@@ -68,17 +68,17 @@ export default new Vuex.Store({
                         element.place = element.event.place;
                     });
                     commit('setEvents', res.data);
-                }).catch(err => {
-                    commit('error', err);
+                }).catch(() => {
+                    localStorage.removeItem('user');
                 });
         },
 
         async fetchPersons({ commit }) {
             await REST_interface.getCollection("persons")
                 .then(res => {
-                    commit('setPersons', res.data.filter(item => item.person.firstname !== '#DUMMY'));
-                }).catch(err => {
-                    commit('error', err);
+                    commit('setPersons', res.data);
+                }).catch(() => {
+                    localStorage.removeItem('user');
                 });
         },
 

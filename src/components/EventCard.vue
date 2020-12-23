@@ -49,6 +49,7 @@
         <v-icon>mdi-account-plus-outline</v-icon>  
         </v-btn>
         <v-btn
+        @click="dialogAddDummy = true"
         >
         <v-icon>mdi-account-multiple-outline</v-icon>  
         </v-btn>
@@ -85,8 +86,17 @@
           v-model="dialogPersons"
         >
         <PersonList
-          :_id="event._id"
+          :event="event"
+          :eventView="true"
           @close-dialog=" dialogPersons = false"
+        />
+    </v-dialog>
+    <v-dialog
+          v-model="dialogAddDummy"
+        >
+        <AddDummy
+          :eventItem="event"
+          @close-dialog=" dialogAddDummy = false"
         />
     </v-dialog>
     </v-card>
@@ -98,6 +108,7 @@ import moment from "moment";
 import EventDialog from "@/components/EventDialog.vue"
 import DeleteItemDialog from "@/components/DeleteItemDialog.vue"
 import PersonList from "@/components/PersonList.vue"
+import AddDummy from "@/components/AddDummy.vue"
 
 export default {
     name: 'EventCard',
@@ -105,7 +116,8 @@ export default {
     components: {
     EventDialog,
     DeleteItemDialog,
-    PersonList
+    PersonList,
+    AddDummy
   },
     data () {
       return {
@@ -113,6 +125,7 @@ export default {
         dialogEditEvent: false,
         dialogDeleteEvent: false,
         dialogPersons:false,
+        dialogAddDummy: false,
         }
     },
     methods:{
@@ -128,7 +141,7 @@ export default {
           this.waitForAPI = false;
         }).catch(err=>{
           this.waitForAPI = false;
-          close.log(err);
+          console.log(err);
         })
       }
     },

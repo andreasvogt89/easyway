@@ -12,11 +12,19 @@
         single-line
         hide-details
       ></v-text-field>
+      <v-btn
+            v-if="eventView"
+            @click="closeDialog()"
+            elevation="2"
+            class="ma-2"
+        >
+        <v-icon large>mdi-close</v-icon>
+        </v-btn>
     </v-card-title>
     <v-data-table
       class="secondary"
       :headers="headers"
-      :items="getStoredPersons"
+      :items="event_view ? getFilteredPersons : getStoredPersons"
       :search="search"
       item-key="_id"
       :loading="loading"
@@ -34,6 +42,15 @@
               @click="newPerson()"
             >
               Neue Lappe
+      </v-btn>
+      <v-btn
+              color="primary"
+              dark
+              v-if="eventView"
+              class="ma-2"
+              @click="dialogAddPersonActiv = true"
+            >
+              Add Bestehendi Lappe
       </v-btn>
       </v-toolbar>
     </template>
@@ -71,8 +88,18 @@
         >
       <PersonDialog
       :dialogPerson="dialogPerson"
-      :editPerson="edit" 
+      :editPerson="edit"
+      :preEventSelection="event_view ? eventItem : undefined" 
       @close-dialog="dialogPersonActive = false" />
+    </v-dialog>
+    <v-dialog
+          v-if="dialogAddPersonActiv"
+          v-model="dialogAddPersonActiv"
+        >
+        <AddPerson
+        :eventItem="eventItem"
+        @close-dialog="dialogAddPersonActiv = false" />
+        />   
     </v-dialog>
     <v-dialog
           v-model="dialogDeletePerson"
@@ -91,25 +118,36 @@
 <script>
 import DeleteItemDialog from "@/components/DeleteItemDialog.vue";
 import PersonDialog from "@/components/PersonDialog.vue";
+import AddPerson from "@/components/AddPerson.vue";
 import moment from "moment";
 
 export default {
     name: 'PersonList',
+    props:{
+      eventView: Boolean,
+      event: Object,
+    },
     data () {
       return {
         search: '',
         error: false,
         loading: false,
         dialogPersonActive: false,
+        dialogAddPersonActiv: false,
         dialogDeletePerson: false,
         delete_ID: "",
         edit: false,
+      
+        eventItem: this.event,
+        event_view:this.eventView,
+        persons: [],
         headers: [
           { text: 'Vorname', value: 'person.firstname' },
           { text: 'Nachname', value: 'person.lastname' },
           { text: 'Geschlecht', value: 'person.gender' },
           { text: 'Alter', value: 'person.age' },
           { text: 'Geburtstag', value: 'person.birthdate' },
+          { text: 'Kommentar', value: 'person.comments' },
           { text: 'Strasse', value: 'person.street' },
           { text: 'Strassennummer', value: 'person.street_number' },
           { text: 'Wohnort', value: 'person.city' },
@@ -124,19 +162,26 @@ export default {
     },
     components:{
       PersonDialog,
-      DeleteItemDialog
+      DeleteItemDialog,
+      AddPerson
     },
     created() {
       this.initialize();   
     },
     computed: {
       getStoredPersons () {
-        return this.$store.getters.getPersons
+        return this.$store.getters.getPersons.filter(
+          item => item.person.firstname !== '#DUMMY')
         },
+      getFilteredPersons(){
+        return this.$store.getters.getPersons.
+        filter(item => this.isIncluded(this.event._id,item.person.event))
+      }
     },
     methods: {
       async initialize (){
         await this.$store.dispatch('fetchPersons');
+        await this.$store.dispatch('fetchEvents');
       },
 
       editPerson (item) {
@@ -176,6 +221,20 @@ export default {
          moment.locale('de-ch')        
          return new moment(newDate).format('LL');
       },
+      isIncluded(id, personEvents) {
+          let answer = false;
+          personEvents.forEach(item => {
+              if (item._id == id) {
+                  answer = true;
+              }
+          });
+          return answer;
+      },
+      closeDialog(){
+        this.initialize();
+        this.$emit('close-dialog');
+      }
+
     }
 } 
 </script>

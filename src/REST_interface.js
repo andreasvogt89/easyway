@@ -93,8 +93,8 @@ class REST_interface {
         return new Promise(((resolve, reject) =>
             axios.get(host + '/export/excel/' + event_ID, {
                 responseType: 'arraybuffer',
-                'filename': fileName,
                 headers: {
+                    'filename': fileName,
                     'Authorization': "Bearer " +
                         JSON.parse(localStorage.getItem('user')).accessToken,
                 },

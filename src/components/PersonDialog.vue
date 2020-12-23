@@ -189,7 +189,7 @@ export default {
     props:{
         dialogPerson:Object,
         editPerson:Boolean,
-        preEventSelection:String,
+        preEventSelection:Object,
         },
     components:{
       EventPicker
@@ -199,7 +199,7 @@ export default {
         error:"",
         dialogSave: false,
         person_ID:"",
-        event_ID: this.preEventSelection,
+        event: this.preEventSelection,
         person: this.dialogPerson,
         toEdit: this.editPerson,
         menu: false,
@@ -229,21 +229,20 @@ export default {
          this.person = this.person.person;
          this.pickerDate = new Date(this.person.birthdate).toISOString().substr(0, 10);
       } else{
-        if(this.event_ID !== undefined){
-        this.person.push(this.event_ID);
+        if(this.event !== undefined){
+          this.person.event.push(this.event);
         }
-      } 
-      
+      }   
   },
   methods: {
     async initialize () {
         await this.$store.dispatch('fetchPersons');
     },
     async savePerson(){
+        console.log(this.person)
         this.dialogSave = true
         if(this.toEdit){
           this.person.birthdate = new Date(this.pickerDate);
-          this.person.age = this.calculateAge();
           await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
                 this.initialize();
@@ -254,8 +253,7 @@ export default {
               this.dialogSave = false
             });
         } else {
-          this.person.birthdate = new Date(this.pickerDate);
-          this.person.age = this.calculateAge();
+          this.person.birthdate = new Date(this.pickerDate); 
           await REST_interface.postToCollection("persons",{person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
                 this.initialize();
@@ -273,11 +271,6 @@ export default {
     save (date) {
         this.$refs.menu.save(date)
       },
-    calculateAge() { 
-    var ageDifMs = Date.now() - new Date(this.pickerDate).getTime();
-    var ageDate = new Date(ageDifMs); 
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
-    },
     setEvents(selectedEvents){
       this.person.event = selectedEvents;
     },

@@ -1,7 +1,9 @@
 <template>
 <div>
 <v-container>
-  <PersonList />
+  <PersonList 
+  :eventView="false"
+  />
 </v-container>
 </div>
 </template>
