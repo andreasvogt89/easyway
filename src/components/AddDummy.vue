@@ -3,7 +3,7 @@
   <v-card
   class="secondary ma-2 pa-3"
   >
-  <h1>Neui Statistik Lappe erfasse</h1>
+  <h3>Neui Statistik Lappe erfasse</h3>
   <v-form>
       <div>
            <v-btn
