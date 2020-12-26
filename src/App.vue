@@ -17,7 +17,7 @@
     <v-footer
       v-if="this.$store.getters.loginState"
       color="secondary"
-      padless
+      :fixed="this.$route.name === 'Events' ? false : true"
     >
     <v-row
 
@@ -60,24 +60,24 @@ export default {
       }
     },
   async created(){
-       this.loginActive = true;
-       if(localStorage.getItem('user') !== null){ 
-        let user = JSON.parse(localStorage.getItem('user'));
-        await this.$store.dispatch('reLogin', user.user[0]);
-        await this.$store.dispatch('fetchEvents');
-        if(this.$store.getters.loginState){
-          this.loginActive = false;
-        } else {
-          localStorage.removeItem('user');
-          await this.$router.replace({name: 'Login'});
-          this.loginActive = false;
-        }
-        } else{
-          localStorage.removeItem('user');
-          await this.$router.replace({name: 'Login'});
-          this.loginActive = false;
-        }
-
+      this.loginActive = true;
+            if(localStorage.getItem('user') !== null){ 
+              let user = JSON.parse(localStorage.getItem('user'));
+              await this.$store.dispatch('reLogin', user.user[0]);
+              await this.$store.dispatch('fetchEvents');
+              if(this.$store.getters.loginState){
+                this.loginActive = false;
+              } else {
+                localStorage.removeItem('user');
+                await this.$router.replace({name: 'Login'});
+                this.loginActive = false;
+              }
+              } else{
+                localStorage.removeItem('user');
+                await this.$router.replace({name: 'Login'});
+                this.loginActive = false;
+              }
+              this.loginActive = false;
   },
 }
 </script>

@@ -68,8 +68,9 @@ export default new Vuex.Store({
                         element.place = element.event.place;
                     });
                     commit('setEvents', res.data);
-                }).catch(() => {
+                }).catch(err => {
                     localStorage.removeItem('user');
+                    commit('error', err)
                 });
         },
 
@@ -77,8 +78,9 @@ export default new Vuex.Store({
             await REST_interface.getCollection("persons")
                 .then(res => {
                     commit('setPersons', res.data);
-                }).catch(() => {
+                }).catch(err => {
                     localStorage.removeItem('user');
+                    commit('error', err)
                 });
         },
 
@@ -111,6 +113,9 @@ export default new Vuex.Store({
         },
         getPersons: state => {
             return state.persons
+        },
+        getError: state => {
+            return state.error
         },
 
     },

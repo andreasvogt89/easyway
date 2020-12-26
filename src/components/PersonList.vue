@@ -72,6 +72,15 @@
     <template v-slot:[`item.person.birthdate`]="{ item }">
       {{parseDate(item.person.birthdate)}}
     </template>
+    <template v-slot:[`item.person.phone`]="{ item }">
+      +41{{item.person.phone}}
+    </template>
+    <template v-slot:[`item.person.emergency_phone`]="{ item }">
+      +41{{item.person.emergency_phone}}
+    </template>
+    <template v-slot:[`item.person.gender`]="{ item }">
+      <v-icon>{{item.person.gender === 'W' ? 'mdi-face-woman': 'mdi-face'}}</v-icon>
+    </template>
     <template v-slot:no-data>
       <v-btn
         color="primary"

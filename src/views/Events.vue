@@ -1,5 +1,7 @@
 <template>
-   <v-container>
+   <v-container
+    max-height="300px"
+   >
     <v-data-iterator
       :items="getStoredEvents"
       :search="search"
@@ -39,7 +41,7 @@
       :editEvent="false" 
       @close-dialog="dialogEventActive = false" />
       </v-dialog>
-  </v-container>
+   </v-container>
 </template>
 
 <script>

@@ -64,13 +64,8 @@ export default {
         this.waitForAPI = true;
         await REST_interface.deleteItemInCollection(this.collectionName,this.event_ID).then(resp=>{
             console.log("Status deleting: "+ resp.statusText);
-            if(this.collectionName === "events"){
             this.$store.dispatch('fetchEvents');
             this.$store.dispatch('fetchPersons');
-            } else{
-            this.$store.dispatch('fetchEvents');
-            this.$store.dispatch('fetchPersons');
-            }
             this.waitForAPI = false;
             this.closeDialog();
         }).catch(err=>{
@@ -79,7 +74,6 @@ export default {
             });
           },
     closeDialog(){
-
           this.$emit('close-dialog');
       }, 
           

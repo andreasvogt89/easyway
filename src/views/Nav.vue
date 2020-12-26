@@ -42,10 +42,6 @@
              <v-icon>mdi-export</v-icon>
         </v-btn>
 
-        <v-btn icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
-
         <template v-slot:extension>
             <v-tabs align-with-title color="accent">
             <v-tab @click="$router.replace({name: 'Events'})" >Events</v-tab>
