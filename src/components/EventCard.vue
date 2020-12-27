@@ -59,6 +59,7 @@
         <v-icon>mdi-file-excel-outline</v-icon>  
         </v-btn>
         <v-btn
+        v-if="!calendarView"
         @click="dialogDeleteEvent = true"
         >
         <v-icon>mdi-delete</v-icon>  

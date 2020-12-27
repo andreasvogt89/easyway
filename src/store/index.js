@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import REST_interface from "@/REST_interface";
-
+import router from '@/router/index'
 
 Vue.use(Vuex)
 
@@ -11,6 +11,7 @@ export default new Vuex.Store({
             isLoggedIn: false,
             username: "",
             role: "",
+            expiresIn: "",
         },
         events: [],
         persons: [],
@@ -19,8 +20,9 @@ export default new Vuex.Store({
     },
     mutations: {
         setUser(state, data) {
-            state.login.username = data.username;
-            state.login.role = data.role;
+            state.login.username = data.user[0].username;
+            state.login.role = data.user[0].role;
+            state.login.expiresIn = data.expiresIn;
             state.login.isLoggedIn = true;
         },
         removeUser(state) {
@@ -42,21 +44,30 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        async login({ commit }, user) {
+        async login({ commit, dispatch }, user) {
             await REST_interface.login(user)
                 .then(res => {
                     localStorage.setItem('user', JSON.stringify(res.data));
-                    commit('setUser', res.data.user[0]);
+                    commit('setUser', res.data);
+                    dispatch('setLogoutTimer', res.data.expiresIn);
                 }).catch(err => {
                     commit('error', err);
                 });
+
         },
-        async reLogin({ commit }, user) {
-            commit('setUser', user);
+        async reLogin({ commit, dispatch }, data) {
+            commit('setUser', data);
+            dispatch('setLogoutTimer', data.expiresIn);
         },
         logout({ commit }) {
             commit('removeUser');
             localStorage.removeItem('user');
+        },
+        setLogoutTimer({ commit }, expirationTime) {
+            setTimeout(() => {
+                commit('removeUser');
+            }, expirationTime * 1000)
+            router.replace('/login');
         },
         async fetchEvents({ commit }) {
             await REST_interface.getCollection("events")

@@ -73,7 +73,6 @@ export default {
        await this.$store.dispatch('login', {
           username: this.input.username,
           password: this.input.password,
-          role:"Admin"
         });
         if(this.$store.getters.loginState){
           await this.$router.replace({name: 'Events'});
