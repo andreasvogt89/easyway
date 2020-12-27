@@ -87,14 +87,14 @@
           @click:date="viewDay"
           @change="updateRange"
         ></v-calendar>
-        <v-menu
+        <v-dialog
           v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
         >
-         <EventCard :event="selectedEvent" />
-        </v-menu>
+         <EventCard 
+         :event="selectedEvent"
+         :calendar_view="true"
+          @close-event="closeEvent()" />
+        </v-dialog>
       </v-sheet>
     </v-col>
   </v-row>
@@ -116,7 +116,6 @@ import EventCard from "@/components/EventCard.vue"
         '4day': '4 Days',
       },
       selectedEvent: {},
-      selectedElement: null,
       selectedOpen: false,
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
@@ -141,23 +140,13 @@ import EventCard from "@/components/EventCard.vue"
       next () {
         this.$refs.calendar.next()
       },
-      showEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedEvent = event.data
-          this.selectedElement = nativeEvent.target
-          setTimeout(() => {
-            this.selectedOpen = true
-          }, 10)
-        }
-
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          setTimeout(open, 10)
-        } else {
-          open()
-        }
-
-        nativeEvent.stopPropagation()
+      showEvent ({  event }) {
+        this.selectedEvent = event.data
+        this.selectedOpen = true  
+      },
+      closeEvent(){
+        this.selectedOpen = false;
+        this.updateRange();
       },
       updateRange () {
         const events = []
@@ -169,7 +158,6 @@ import EventCard from "@/components/EventCard.vue"
             color: this.colors[this.rnd(0, this.colors.length - 1)],
           })
         }
-
         this.events = events
       },
       rnd (a, b) {

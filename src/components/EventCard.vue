@@ -1,7 +1,7 @@
 <template>
+  <v-container>
     <v-card
     class="ma-10"
-    min-width="300px"
     color="secondary"
     :loading="waitForApi"
     :disabled="waitForApi"
@@ -33,8 +33,8 @@
     </v-card-subtitle>
     </div>
     <v-divider class="mx-4"></v-divider>
-    <v-card-text outlined label="Kommentare" >{{event.event.comments}}</v-card-text>
-    <v-divider class="ma-2"></v-divider>
+    <v-card-text class="text-md-body-1" >{{event.event.comments}}</v-card-text>
+    <v-divider class="ma-4"></v-divider>
     <v-card-actions
     class="ma-1"
     >
@@ -86,7 +86,7 @@
           v-model="dialogPersons"
         >
         <PersonList
-          :event="event"
+          :eventItem="event"
           :eventView="true"
           @close-dialog=" dialogPersons = false"
         />
@@ -99,8 +99,17 @@
           @close-dialog=" dialogAddDummy = false"
         />
     </v-dialog>
+    <div v-if="calendarView">
+      <v-btn
+        @click="closeEvent"
+        elevation="2"
+        class="ma-2"
+      >
+      <v-icon large>mdi-close</v-icon>
+      </v-btn>
+    </div>
     </v-card>
-    
+  </v-container>
 </template>
 <script>
 import REST_interface from "@/REST_interface";
@@ -112,7 +121,10 @@ import AddDummy from "@/components/AddDummy.vue"
 
 export default {
     name: 'EventCard',
-    props:{event:Object},
+    props:{
+      event:Object,
+      calendar_view:Boolean,
+      },
     components: {
     EventDialog,
     DeleteItemDialog,
@@ -121,6 +133,7 @@ export default {
   },
     data () {
       return {
+        calendarView: this.calendar_view,
         waitForApi: false,
         dialogEditEvent: false,
         dialogDeleteEvent: false,
@@ -143,8 +156,12 @@ export default {
           this.waitForAPI = false;
           console.log(err);
         })
-      }
+      },
+    closeEvent(){
+        this.$emit('close-event');
     },
+    },
+    
 
 }
 </script>

@@ -29,8 +29,18 @@
         </v-toolbar>
       </template >
       <template v-slot:item="props" >
-         <EventCard :event="props.item" />
+         <EventCard 
+         :event="props.item"
+         :calendar_view="false"
+          />
       </template>
+      <template v-slot:no-data>
+      <v-alert
+      text 
+      class="ma-3"
+      type="error" >Keni Events ume hie..
+      </v-alert>
+    </template>
     </v-data-iterator>
       <v-dialog
           v-model="dialogEventActive"

@@ -46,7 +46,7 @@
       <v-btn
               color="primary"
               dark
-              v-if="eventView"
+              v-if="event_view"
               class="ma-2"
               @click="dialogAddPersonActiv = true"
             >
@@ -82,12 +82,10 @@
       <v-icon>{{item.person.gender === 'W' ? 'mdi-face-woman': 'mdi-face'}}</v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
+      <v-alert
+      text 
+      class="ma-3"
+      type="error" >Keni Lappe ume hie..</v-alert>
     </template>
     </v-data-table>
     <v-dialog
@@ -98,7 +96,7 @@
       <PersonDialog
       :dialogPerson="dialogPerson"
       :editPerson="edit"
-      :preEventSelection="event_view ? eventItem : undefined" 
+      :preEventSelection="event_view ? event_item : undefined" 
       @close-dialog="dialogPersonActive = false" />
     </v-dialog>
     <v-dialog
@@ -106,7 +104,7 @@
           v-model="dialogAddPersonActiv"
         >
         <AddPerson
-        :eventItem="eventItem"
+        :eventItem="event_item"
         @close-dialog="dialogAddPersonActiv = false" />
         />   
     </v-dialog>
@@ -134,7 +132,7 @@ export default {
     name: 'PersonList',
     props:{
       eventView: Boolean,
-      event: Object,
+      eventItem: Object,
     },
     data () {
       return {
@@ -146,10 +144,8 @@ export default {
         dialogDeletePerson: false,
         delete_ID: "",
         edit: false,
-      
-        eventItem: this.event,
+        event_item: this.eventItem,
         event_view:this.eventView,
-        persons: [],
         headers: [
           { text: 'Vorname', value: 'person.firstname' },
           { text: 'Nachname', value: 'person.lastname' },
@@ -175,7 +171,7 @@ export default {
       AddPerson
     },
     created() {
-      this.initialize();   
+      this.initialize();
     },
     computed: {
       getStoredPersons () {
@@ -184,7 +180,7 @@ export default {
         },
       getFilteredPersons(){
         return this.$store.getters.getPersons.
-        filter(item => this.isIncluded(this.event._id,item.person.event))
+        filter(item => this.isIncluded(this.event_item._id,item.person.event))
       }
     },
     methods: {
