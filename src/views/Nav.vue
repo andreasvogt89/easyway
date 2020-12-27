@@ -42,12 +42,13 @@
              <v-icon>mdi-export</v-icon>
         </v-btn>
 
-        <template v-slot:extension>
-            <v-tabs align-with-title color="accent">
-            <v-tab @click="$router.replace({name: 'Events'})" >Events</v-tab>
-            <v-tab @click="$router.replace({name: 'Calendar'})" >Kalender</v-tab>
-            <v-tab @click="$router.replace({name: 'Persons'})">Personen</v-tab>
-            <v-tab @click="$router.replace({name: 'About'})" >About</v-tab>
+        <template v-slot:extension >
+            <v-tabs 
+            align-with-title color="accent">
+            <v-tab :to="{name: 'Events'}" >Events</v-tab>
+            <v-tab :to="{name: 'Calendar'}" >Kalender</v-tab>
+            <v-tab :to="{name: 'Persons'}">Personen</v-tab>
+            <v-tab :to="{name: 'About'}" >About</v-tab>
             </v-tabs>
         </template>
         </v-app-bar>

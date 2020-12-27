@@ -120,8 +120,8 @@ import EventCard from "@/components/EventCard.vue"
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
     }),
-    mounted () {
-      this.$refs.calendar.checkChange()
+    mounted() {
+      this.updateRange();
     },
     methods: {
       viewDay ({ date }) {
@@ -148,8 +148,9 @@ import EventCard from "@/components/EventCard.vue"
         this.selectedOpen = false;
         this.updateRange();
       },
-      updateRange () {
+      async updateRange () {
         const events = []
+        await this.$store.dispatch('fetchEvents');
         for (let i = 0; i < this.getStoredEvents.length; i++) {
           events.push({
             data: this.getStoredEvents[i],
