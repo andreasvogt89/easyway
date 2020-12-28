@@ -118,7 +118,7 @@ import EventCard from "@/components/EventCard.vue"
       selectedEvent: {},
       selectedOpen: false,
       events: [],
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'accent'],
     }),
     mounted() {
       this.updateRange();

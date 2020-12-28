@@ -223,9 +223,13 @@ export default {
       },
 
       parseDate(date){
+        if(date !== undefined){
          let newDate = new Date(date);
          moment.locale('de-ch')        
          return new moment(newDate).format('LL');
+        } else {
+          return ""
+        }
       },
       isIncluded(id, personEvents) {
           let answer = false;
