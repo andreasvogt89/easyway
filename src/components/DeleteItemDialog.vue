@@ -1,7 +1,7 @@
 <template>
     <v-card color="secondary">
     <v-card-title 
-    class="ma-5px text-center"
+    class="ma-5 text-center"
 
     >Würklich wägputze 😱?</v-card-title>
     <v-card-text>
@@ -23,25 +23,25 @@
       </v-btn>
     </v-card-text>
     <v-alert
-      class="ma-10"
+      class="ma-2"
       v-if="error != ''"
       text
       prominent
       type="error"
       icon="mdi-cloud-alert"
     >
-      Somthing went wrong 😐 => error message: {{error}}
+      Something went wrong 😐 => {{error}}
        <v-btn
             color="error"
-            class="ma-1"
+            class="ma-3"
             outlined
             @click="error = ''"
           >
             Okay
           </v-btn>
     </v-alert>
+    <br>
     </v-card>
-  
 </template>
 <script>
 import REST_interface from "@/REST_interface";
@@ -55,14 +55,14 @@ export default {
       return {
         waitForAPI: false,
         error:"",
-        event_ID: this._id,
+        delete_ID: this._id,
         collectionName: this.collection
         }
     },
  methods:{
     async deleteItem() {
         this.waitForAPI = true;
-        await REST_interface.deleteItemInCollection(this.collectionName,this.event_ID).then(resp=>{
+        await REST_interface.deleteItemInCollection(this.collectionName,this.delete_ID).then(resp=>{
             console.log("Status deleting: "+ resp.statusText);
             this.$store.dispatch('fetchEvents');
             this.$store.dispatch('fetchPersons');

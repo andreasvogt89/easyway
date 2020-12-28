@@ -43,10 +43,11 @@
     </template>
     </v-data-iterator>
       <v-dialog
+          v-if="dialogEventActive" 
           v-model="dialogEventActive"
           max-width="500px"
         >
-      <EventDialog 
+      <EventDialog
       :dialogEvent="dialogEvent"
       :editEvent="false" 
       @close-dialog="dialogEventActive = false" />

@@ -91,7 +91,7 @@
     <v-dialog
           v-if="dialogPersonActive"
           v-model="dialogPersonActive"
-          max-width="500px"
+          max-width="600px"
         >
       <PersonDialog
       :dialogPerson="dialogPerson"
@@ -110,6 +110,7 @@
     </v-dialog>
     <v-dialog
           v-model="dialogDeletePerson"
+          v-if="dialogDeletePerson" 
         >
         <DeleteItemDialog
           :_id="delete_ID"
@@ -156,7 +157,7 @@ export default {
           { text: 'Strasse', value: 'person.street' },
           { text: 'Strassennummer', value: 'person.street_number' },
           { text: 'Wohnort', value: 'person.city' },
-          { text: 'Postleizahl', value: 'person.postcode' },
+          { text: 'Postleitzahl', value: 'person.postcode' },
           { text: 'Kontaktnummer', value: 'person.phone' },
           { text: 'Notfallnummer', value: 'person.emergency_phone' },
           { text: 'Email', value: 'person.email' },

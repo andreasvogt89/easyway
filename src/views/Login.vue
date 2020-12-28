@@ -77,6 +77,7 @@ export default {
         if(this.$store.getters.loginState){
           await this.$router.replace({name: 'Events'});
         } else {
+          await this.$store.dispatch('logout')
           localStorage.removeItem('user');
           this.input.message = "That's wrong 🙄... try again 🙂"
         }

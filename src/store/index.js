@@ -11,8 +11,9 @@ export default new Vuex.Store({
             isLoggedIn: false,
             username: "",
             role: "",
-            expiresIn: "",
+            expiresAt: "",
         },
+        timeLeft: "",
         events: [],
         persons: [],
         error: "",
@@ -41,6 +42,9 @@ export default new Vuex.Store({
         },
         setPersons(state, persons) {
             state.persons = persons
+        },
+        setTimeLeft(state, time) {
+            state.timeLeft = time
         }
     },
     actions: {
@@ -49,7 +53,7 @@ export default new Vuex.Store({
                 .then(res => {
                     localStorage.setItem('user', JSON.stringify(res.data));
                     commit('setUser', res.data);
-                    dispatch('setLogoutTimer', res.data.expiresIn);
+                    dispatch('setLogoutTimer', res.data.expiresAt);
                 }).catch(err => {
                     commit('error', err);
                 });
@@ -57,17 +61,26 @@ export default new Vuex.Store({
         },
         async reLogin({ commit, dispatch }, data) {
             commit('setUser', data);
-            dispatch('setLogoutTimer', data.expiresIn);
+            dispatch('setLogoutTimer', data.expiresAt);
         },
         logout({ commit }) {
             commit('removeUser');
             localStorage.removeItem('user');
         },
-        setLogoutTimer({ commit }, expirationTime) {
+        setLogoutTimer({ commit }, expirationAt) {
             setTimeout(() => {
                 commit('removeUser');
-            }, expirationTime * 1000)
-            router.replace('/login');
+            }, 3600 * 3 * 1000);
+            setInterval(() => {
+                let distance = new Date(expirationAt).getTime() -
+                    new Date().getTime();
+                let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                let timeLeft = hours + ':' + minutes + ':' + seconds
+                commit('setTimeLeft', timeLeft)
+            }, 10);
+            router.replace('/');
         },
         async fetchEvents({ commit }) {
             await REST_interface.getCollection("events")
@@ -128,6 +141,8 @@ export default new Vuex.Store({
         getError: state => {
             return state.error
         },
-
+        getTokenExpiresIn: state => {
+            return state.timeLeft
+        }
     },
 });

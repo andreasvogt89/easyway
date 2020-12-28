@@ -71,10 +71,10 @@
       type="error"
       icon="mdi-cloud-alert"
     >
-      Somthing went wrong 😐 => error message: {{error}}
+      Something went wrong 😐 => {{error}}
        <v-btn
             color="error"
-            class="ma-1"
+            class="ma-3"
             outlined
             @click="error = ''"
           >

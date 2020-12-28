@@ -150,7 +150,6 @@ import EventCard from "@/components/EventCard.vue"
       },
       async updateRange () {
         const events = []
-        await this.$store.dispatch('fetchEvents');
         for (let i = 0; i < this.getStoredEvents.length; i++) {
           events.push({
             data: this.getStoredEvents[i],

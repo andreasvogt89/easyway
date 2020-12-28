@@ -55,8 +55,9 @@
           :disabled="loading"
           @click="refreshSelectedEvents(item)"
         >
-          <v-list-item-title v-text="item.event.name"></v-list-item-title>
+          <v-list-item-title class="text-left" v-text="item.event.name"></v-list-item-title>
           <v-list-item-subtitle v-text="parseDate(item.event.eventDate)" ></v-list-item-subtitle>
+          <v-list-item-subtitle v-text="item.event.place" ></v-list-item-subtitle>
         </v-list-item>
       </template>
     </v-list>

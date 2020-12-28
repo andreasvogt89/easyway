@@ -1,6 +1,7 @@
 <template>
     <v-card
-       color="secondary pa-3">
+       color="secondary pa-3"
+       >
         <v-card-title>Neue Lappe</v-card-title>
         <v-form>
             <v-row>
@@ -9,7 +10,7 @@
                 v-model="person.firstname"
                 :rules="[() => !!person.firstname || 'Bitte Ausfüllen!']"
                 outlined
-                placeholder="Vorname"
+                label="Vorname"
                 required
             ></v-text-field>
             </v-col>
@@ -18,7 +19,7 @@
                     v-model="person.lastname"
                     :rules="[() => !!person.lastname || 'Bitte Ausfüllen!']"
                     outlined
-                    placeholder="Nachname"
+                    label="Nachname"
                     required
                 ></v-text-field>
             </v-col>
@@ -73,7 +74,7 @@
                     v-model="person.phone"
                     :rules="[rules.number, rules.numberLength]"
                     outlined
-                    placeholder="Handy"
+                    label="Handy"
                 ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
@@ -81,7 +82,7 @@
                     v-model="person.emergency_phone"
                     :rules="[rules.number, rules.numberLength]"
                     outlined
-                    placeholder="Notfallnummer"
+                    label="Notfallnummer"
                 ></v-text-field>
             </v-col>
           </v-row>
@@ -91,28 +92,28 @@
                     outlined
                     v-model="person.email"
                     :rules="[rules.email]"
-                    placeholder="E-mail"
+                    label="E-mail"
                 ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">         
                 <v-text-field
                     v-model="person.class"
                     outlined
-                    placeholder="Klasse"
+                    label="Klasse"
                 ></v-text-field>
             </v-col>
           </v-row>
           <v-text-field
             v-model="person.comments"
             outlined
-            placeholder="Kommentar"
+            label="Kommentar"
           ></v-text-field>
         <v-row>
          <v-col cols="12" sm="8">
             <v-text-field
                 v-model="person.city"
                 outlined
-                placeholder="Ort"
+                label="Ort"
             ></v-text-field>
         </v-col>
         <v-col cols="12" sm="4">
@@ -120,7 +121,7 @@
             v-model="person.postcode"
             outlined
             :rules="[rules.number, rules.postcode]"
-            placeholder="Postleizahl"
+            label="Postleitzahl"
           ></v-text-field>
         </v-col>
         </v-row>
@@ -129,7 +130,7 @@
             <v-text-field
                 v-model="person.street"
                 outlined
-                placeholder="Strasse"
+                label="Strasse"
             ></v-text-field>
         </v-col>
         <v-col cols="12" sm="4">
@@ -137,7 +138,7 @@
             v-model="person.street_number"
             outlined
             :rules="[rules.number, rules.postcode]"
-            placeholder="Nr."
+            label="Nr."
           ></v-text-field>
         </v-col>
         </v-row>
@@ -168,10 +169,10 @@
       type="error"
       icon="mdi-cloud-alert"
     >
-      Somthing went wrong 😐 => error message: {{error}}
+      Something went wrong 😐 => {{error}}
        <v-btn
             color="error"
-            class="ma-1"
+            class="ma-3"
             outlined
             @click="error = ''"
           >

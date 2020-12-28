@@ -1,8 +1,7 @@
 <template>
   <v-app id="app">
     <v-overlay
-        v-if="this.$store.getters.loginState"
-        :value="loginActive"
+        :value="reLoginActive"
     >
       <v-progress-circular
           size="200"
@@ -30,13 +29,16 @@
         Gruppe: <strong>{{this.$store.getters.getUserRole}}</strong><br>
       </v-col>
       <v-col
-      cols="6"
+      cols="4"
       >
+      Token expires in: <strong>{{this.$store.getters.getTokenExpiresIn}}</strong>
       </v-col>
       <v-col
-      cols="2"
+      cols="4"
       >
-        <div>
+        <div
+        class="text-right"
+        >
         <img class="footerImage" src="https://icons.andreas-vogt.ch/wolf.png">
         </div>
       </v-col>
@@ -56,28 +58,22 @@ export default {
   },
   data () {
       return {
-        loginActive : false,
+        reLoginActive : false,
       }
     },
-  async created(){
-      this.loginActive = true;
+  async mounted(){
+      this.reLoginActive = true;
             if(localStorage.getItem('user') !== null){ 
               let user = JSON.parse(localStorage.getItem('user'));
               await this.$store.dispatch('reLogin', user);
               await this.$store.dispatch('fetchEvents');
-              if(this.$store.getters.loginState){
-                this.loginActive = false;
-              } else {
-                localStorage.removeItem('user');
-                await this.$router.replace({name: 'Login'});
-                this.loginActive = false;
-              }
+              this.reLoginActive = false;
+              await this.$router.replace('/');
               } else{
                 localStorage.removeItem('user');
                 await this.$router.replace({name: 'Login'});
-                this.loginActive = false;
+                this.reLoginActive = false;
               }
-              this.loginActive = false;
   },
 }
 </script>
