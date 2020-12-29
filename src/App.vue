@@ -67,6 +67,7 @@ export default {
               let user = JSON.parse(localStorage.getItem('user'));
               await this.$store.dispatch('reLogin', user);
               await this.$store.dispatch('fetchEvents');
+              await this.$store.dispatch('fetchPersons');
               this.reLoginActive = false;
               await this.$router.replace('/');
               } else{

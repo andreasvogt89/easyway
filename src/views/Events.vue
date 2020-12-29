@@ -50,7 +50,7 @@
       <EventDialog
       :dialogEvent="dialogEvent"
       :editEvent="false" 
-      @close-dialog="dialogEventActive = false" />
+      @close-dialog="clearEventDialog()" />
       </v-dialog>
    </v-container>
 </template>
@@ -86,6 +86,16 @@ export default {
     async initialize () {
         await this.$store.dispatch('fetchEvents');
     },
+    clearEventDialog(){
+      this.dialogEventActive = false;
+      this.dialogEvent = {
+          eventDate: "",
+          name: "",
+          place: "",
+          participants: [],
+          comments:"",
+        };
+    }
   },
   computed: {
       getStoredEvents () {

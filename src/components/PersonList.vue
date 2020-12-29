@@ -12,6 +12,7 @@
         single-line
         hide-details
       ></v-text-field>
+     
       <v-btn
             v-if="eventView"
             @click="closeDialog()"
@@ -231,6 +232,7 @@ export default {
           return ""
         }
       },
+
       isIncluded(id, personEvents) {
           let answer = false;
           personEvents.forEach(item => {
@@ -240,11 +242,11 @@ export default {
           });
           return answer;
       },
+
       closeDialog(){
         this.initialize();
         this.$emit('close-dialog');
       }
-
     }
 } 
 </script>

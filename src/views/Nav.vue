@@ -45,6 +45,7 @@
         <template v-slot:extension >
             <v-tabs 
             align-with-title color="accent">
+            <v-tab :to="{name: 'Dashboard'}" >Dashboard</v-tab>
             <v-tab :to="{name: 'Events'}" >Events</v-tab>
             <v-tab :to="{name: 'Calendar'}" >Kalender</v-tab>
             <v-tab :to="{name: 'Persons'}">Personen</v-tab>

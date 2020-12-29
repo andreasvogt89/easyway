@@ -88,10 +88,29 @@ class REST_interface {
                     reject(err);
                 })))
         }
-        // Get Excel sheet of all graphics
-    static createExcel(fileName, event_ID) {
+        // Get Excel sheet for Events
+    static createEventExcel(fileName, event_ID) {
         return new Promise(((resolve, reject) =>
-            axios.get(host + '/export/excel/' + event_ID, {
+            axios.get(host + '/export/excel/event/' + event_ID, {
+                responseType: 'arraybuffer',
+                headers: {
+                    'filename': fileName,
+                    'Authorization': "Bearer " +
+                        JSON.parse(localStorage.getItem('user')).accessToken,
+                },
+            }).then((res) => {
+                resolve(
+                    this.forceFileDownload(res, fileName)
+                );
+            }).catch((err) => {
+                reject(err);
+            })))
+    }
+
+    // Get Excel sheet for all Persons
+    static createPersonExcel(fileName, eventNames) {
+        return new Promise(((resolve, reject) =>
+            axios.post(host + '/export/excel/persons', { eventNames: eventNames }, {
                 responseType: 'arraybuffer',
                 headers: {
                     'filename': fileName,

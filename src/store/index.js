@@ -18,6 +18,31 @@ export default new Vuex.Store({
         persons: [],
         error: "",
         backend: "",
+        eventNames: [
+            "Jugendtreff L'Dorf",
+            "Summerlounge L'Dorf",
+            "Summerlounge Rüttenen",
+            "Summerlounge Oberdorf",
+            "Summerlounge Bellach",
+            "FTM L'Dorf",
+            "FTM Kids L'Dorf",
+            "FTM Rüttenen",
+            "FTM Kids Rüttenen",
+            "FTM Oberdorf",
+            "FTM Kids Oberdorf",
+            "FTM Bellach",
+            "FTM Kids Bellach",
+            "Spielnami L'Dorf",
+            "Spielnami Rüttenen",
+            "Spielnami Oberdorf",
+            "Spielnami Bellach",
+            "Mobile Arbeit L'Dorf",
+            "Mobile Arbeit Rüttenen",
+            "Mobile Arbeit Oberdorf",
+            "Mobile Arbeit Bellach",
+            "Kreativwerkstatt L'Dorf",
+        ],
+
     },
     mutations: {
         setUser(state, data) {
@@ -70,6 +95,7 @@ export default new Vuex.Store({
         setLogoutTimer({ commit }, expirationAt) {
             setTimeout(() => {
                 commit('removeUser');
+                router.replace('/');
             }, 3600 * 3 * 1000);
             setInterval(() => {
                 let distance = new Date(expirationAt).getTime() -
@@ -80,7 +106,7 @@ export default new Vuex.Store({
                 let timeLeft = hours + ':' + minutes + ':' + seconds
                 commit('setTimeLeft', timeLeft)
             }, 10);
-            router.replace('/');
+
         },
         async fetchEvents({ commit }) {
             await REST_interface.getCollection("events")
@@ -143,6 +169,9 @@ export default new Vuex.Store({
         },
         getTokenExpiresIn: state => {
             return state.timeLeft
-        }
+        },
+        getEventNames: state => {
+            return state.eventNames
+        },
     },
 });

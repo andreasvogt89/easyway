@@ -58,7 +58,8 @@
 
 <script>
 export default {
-   data: () => ({
+   data () {
+      return {
     input: {
       username: "",
       password: "",
@@ -66,7 +67,8 @@ export default {
       },
     loginActive: false,
     showPW: false,
-    }),
+    }
+  },
   methods: {
     async executeLogin() {
        this.loginActive = true;

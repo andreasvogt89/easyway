@@ -3,12 +3,14 @@
        color="secondary">
         <v-card-title>Neues Event</v-card-title>
         <v-form>
-          <v-text-field 
-          v-model="event.name" 
-          outlined
-          class="ma-3"
-          label="Event Name"
-          ></v-text-field>
+          <v-select
+            class="ma-3"
+            v-model="event.name"
+            :items="eventNames"
+            label="Event"
+            required
+            outlined
+          ></v-select>
           <v-menu
                 ref="menu"
                 v-model="menu"
@@ -101,6 +103,7 @@ export default {
         toEdit: this.editEvent,
         pickerDate:"",
         menu: false,
+        selectEvent: null, 
       }
   },
   created(){
@@ -110,11 +113,15 @@ export default {
          this.pickerDate = new Date(this.event.eventDate).toISOString().substr(0, 10);
       } 
   },
+  computed: {
+      eventNames () {
+        return this.$store.getters.getEventNames
+        },
+  },
   methods: {
     async initialize () {
         await this.$store.dispatch('fetchEvents');
     },
-
     async saveEvent(){
         this.dialogSave = true
         if(this.toEdit){
@@ -136,8 +143,8 @@ export default {
                 this.closeDialog();
                 this.dialogSave = false
             }).catch(err=>{
-              this.error = err;
-               this.dialogSave = false
+              this.error = err
+              this.dialogSave = false
             });
         }
     },
@@ -147,6 +154,8 @@ export default {
     save (date) {
         this.$refs.menu.save(date)
       },
+    
+
   },
 }
 </script>

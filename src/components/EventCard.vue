@@ -76,6 +76,7 @@
     </v-dialog>
     <v-dialog
           v-model="dialogDeleteEvent"
+          v-if="dialogDeleteEvent"
         >
         <DeleteItemDialog
           :_id="event._id"
@@ -84,6 +85,7 @@
         />
     </v-dialog>
     <v-dialog
+          v-if="dialogPersons"
           v-model="dialogPersons"
         >
         <PersonList
@@ -150,8 +152,8 @@ export default {
       },
     async downloadExcel(event){
         this.waitForAPI = true;
-        let fileName = event.name +'_'+ event.eventDate;
-        await REST_interface.createExcel(fileName ,event._id).then(()=>{
+        let fileName = event.name +'_'+ this.parseDate(event.eventDate);
+        await REST_interface.createEventExcel(fileName ,event._id).then(()=>{
           this.waitForAPI = false;
         }).catch(err=>{
           this.waitForAPI = false;
