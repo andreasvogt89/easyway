@@ -44,6 +44,22 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-col cols="12" sm="8">
+                <v-text-field
+                    v-model="person.city"
+                    outlined
+                    placeholder="Ort"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="4">         
+                <v-text-field
+                    v-model="person.postcode"
+                    outlined
+                    placeholder="Postleitzahl"
+                ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="12" sm="6">
                 <v-text-field
                     v-model="person.class"

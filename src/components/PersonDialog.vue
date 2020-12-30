@@ -240,10 +240,11 @@ export default {
         await this.$store.dispatch('fetchPersons');
     },
     async savePerson(){
-        console.log(this.person)
         this.dialogSave = true
         if(this.toEdit){
-          this.person.birthdate = new Date(this.pickerDate);
+          if(!this.pickerDate === ""){
+            this.person.birthdate = new Date(this.pickerDate);
+          }
           await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
                 this.initialize();
@@ -254,7 +255,9 @@ export default {
               this.dialogSave = false
             });
         } else {
-          this.person.birthdate = new Date(this.pickerDate); 
+          if(!this.pickerDate === ""){
+            this.person.birthdate = new Date(this.pickerDate);
+          }
           await REST_interface.postToCollection("persons",{person:this.person}).then(resp=>{
                 console.log('Person adding status: ' + resp);
                 this.initialize();

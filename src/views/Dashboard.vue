@@ -3,14 +3,20 @@
   <v-card
   class='secondary'
   >
-    <v-card-title>
+    <v-card-title class="blue-grey darken-4">
       Statistik
     </v-card-title>
-    <v-divider class="mx-4"></v-divider>
-    <v-card-subtitle class="text-left">
-      Personen total: {{this.$store.getters.getPersons.length}}
-    </v-card-subtitle>
   <v-row class="ma-1">
+    <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.length"
+       >
+       <v-icon>mdi-account-multiple</v-icon>
+       </v-badge>
+       <p>Personen</p>
+      </v-col>
       <v-col cols=12 sm="2">
        <v-badge
           class="ma-3"
@@ -53,7 +59,7 @@
       </v-col>
   </v-row>
   <v-divider class="mx-4"></v-divider>
-    <v-card-title>
+    <v-card-title >
       Export
     </v-card-title>
       <v-row
@@ -81,6 +87,7 @@
             <v-card-text>Export auswahl in Excel</v-card-text>
             <v-btn
             x-large
+            :disabled="eventNames < 0"
             @click="downloadExcel()"
             >
             <v-icon>mdi-file-excel-outline</v-icon>  
@@ -109,7 +116,7 @@ export default {
         this.loading = true;
         let newDate = new Date();
         moment.locale('de-ch'); 
-        let fileName = "Alle Personen " + new moment(newDate).format('LL');
+        let fileName = "Statistik " + new moment(newDate).format('LL');
         await REST_interface.createPersonExcel(fileName, this.selectedEvents).then(()=>{
           this.loading = false;
         }).catch(err=>{

@@ -164,7 +164,5 @@ export default {
         this.$emit('close-event');
     },
     },
-    
-
 }
 </script>
