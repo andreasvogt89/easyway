@@ -144,7 +144,7 @@
         </v-row>
         <EventPicker 
         @push-events="setEvents($event)"
-        :preEventSelection="person.event"  />
+        :preEventSelection="events"  />
         </v-form>
         <v-btn
         elevation="2"
@@ -200,9 +200,11 @@ export default {
         error:"",
         dialogSave: false,
         person_ID:"",
-        event: this.preEventSelection,
         person: this.dialogPerson,
         toEdit: this.editPerson,
+        preEvent: this.preEventSelection,
+        changedPersonID:null,
+        events: [],
         menu: false,
         pickerDate: "",
         rules: {
@@ -229,45 +231,65 @@ export default {
          this.person_ID = this.person._id;
          this.person = this.person.person;
          this.pickerDate = new Date(this.person.birthdate).toISOString().substr(0, 10);
-      } else{
-        if(this.event !== undefined){
-          this.person.event.push(this.event);
-        }
-      }   
+         this.events = this.getPersonEvents
+        } else {
+          if(this.preEvent !== undefined){
+            this.events.push(this.preEvent);
+          }
+        }   
   },
+  computed: {
+      getPersonEvents () {
+        return this.$store.getters.getEvents.filter(
+          item => item.event.participants.includes(this.person_ID))
+      },
+    },
   methods: {
     async initialize () {
         await this.$store.dispatch('fetchPersons');
     },
     async savePerson(){
         this.dialogSave = true
+        this.changedPersonID = "";
         if(this.toEdit){
-          if(!this.pickerDate === ""){
+          if(this.pickerDate !== ""){
             this.person.birthdate = new Date(this.pickerDate);
           }
-          await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(resp=>{
-                console.log('Person adding status: ' + resp);
-                this.initialize();
-                this.closeDialog();
-                this.dialogSave = false
+          await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(()=>{
+            this.changedPersonID = this.person_ID;
             }).catch(err=>{
               this.error = err;
               this.dialogSave = false
             });
         } else {
-          if(!this.pickerDate === ""){
+          if(this.pickerDate !== ""){
             this.person.birthdate = new Date(this.pickerDate);
           }
           await REST_interface.postToCollection("persons",{person:this.person}).then(resp=>{
-                console.log('Person adding status: ' + resp);
-                this.initialize();
-                this.closeDialog();
-                this.dialogSave = false
+              this.changedPersonID = resp.data.newID
             }).catch(err=>{
               this.error = err;
               this.dialogSave = false
             });
         }
+        await this.asyncForEach(this.$store.getters.getEvents,async (eventItem) =>{
+            if(this.events.find(item=> item._id === eventItem._id)){
+              if(!eventItem.event.participants.includes(this.changedPersonID)){
+                eventItem.event.participants.push(this.changedPersonID)
+              }
+            } else {
+              eventItem.event.participants.splice(eventItem.event.participants.indexOf(this.changedPersonID), 1);
+            }
+            await REST_interface.changeItemInCollection("events", eventItem._id, {
+              event: eventItem.event
+              }).catch((err) => {
+                    this.error = err;
+                    this.dialogSave = false;
+              });
+        });
+        this.initialize();
+        this.closeDialog();
+        this.dialogSave = false;
     },
     closeDialog(){
         this.$emit('close-dialog');
@@ -276,7 +298,12 @@ export default {
         this.$refs.menu.save(date)
       },
     setEvents(selectedEvents){
-      this.person.event = selectedEvents;
+      this.events = selectedEvents;
+    },
+    async asyncForEach(array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+      }
     },
   },
 }

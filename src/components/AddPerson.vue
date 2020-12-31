@@ -97,19 +97,10 @@ export default {
       getStoredPersons () {
         return this.$store.getters.getPersons.filter(
           item => (item.person.firstname !== '#DUMMY'
-          && !this.isIncluded(this.event._id,item.person.event))
+          && !this.event.event.participants.includes(item._id))
           )}
     },
     methods:{
-        isIncluded(id, personEvents) {
-          let answer = false;
-          personEvents.forEach(item => {
-              if (item._id == id) {
-                  answer = true;
-              }
-          });
-          return answer;
-        },
         closeDialog(){
             this.$emit('close-dialog');
         },
@@ -119,23 +110,25 @@ export default {
          return new moment(newDate).format('LL');
       },
       async addEventToPersons(){
-          this.dialogSave = true
-         this.asyncForEach(this.selected, async(item) => { 
-             item.person.event.push(this.event);
-             await REST_interface.changeItemInCollection("persons", item._id, {person:item.person}).then(resp=>{
-                console.log('Person adding status: ' + resp);
-                this.initialize();
-                this.closeDialog();
-                this.dialogSave = false
-            }).catch(err=>{
-              this.error = err;
-              this.dialogSave = false
-            });
+        this.dialogSave = true
+        await this.asyncForEach(this.selected, async(item) => { 
+          this.event.event.participants.push(item._id) 
         });
+        console.log(this.event)
+        await REST_interface.changeItemInCollection("events", this.event._id, {
+        event: this.event.event
+        })
+        .then(()=>{
+              this.initialize();
+              this.closeDialog();
+              this.dialogSave = false;
+        })
+        .catch((err) => {
+              this.error = err;
+            });
       },
       async initialize (){
         await this.$store.dispatch('fetchPersons');
-
       },
       async asyncForEach(array, callback) {
             for (let index = 0; index < array.length; index++) {

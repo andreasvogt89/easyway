@@ -25,7 +25,7 @@
     <v-data-table
       class="secondary"
       :headers="headers"
-      :items="event_view ? getFilteredPersons : getStoredPersons"
+      :items="getStoredPersons"
       :search="search"
       item-key="_id"
       :loading="loading"
@@ -177,13 +177,14 @@ export default {
     },
     computed: {
       getStoredPersons () {
+        if(this.eventView){
+          return this.$store.getters.getPersons.filter(
+          item => this.event_item.event.participants.includes(item._id))
+        } else {
         return this.$store.getters.getPersons.filter(
           item => item.person.firstname !== '#DUMMY')
-        },
-      getFilteredPersons(){
-        return this.$store.getters.getPersons.
-        filter(item => this.isIncluded(this.event_item._id,item.person.event))
-      }
+        }
+      },
     },
     methods: {
       async initialize (){
@@ -218,7 +219,6 @@ export default {
           street: "",
           street_number: "",
           city:"",
-          event:[],
         }
         this.dialogPersonActive = true;
       },
@@ -231,16 +231,6 @@ export default {
         } else {
           return ""
         }
-      },
-
-      isIncluded(id, personEvents) {
-          let answer = false;
-          personEvents.forEach(item => {
-              if (item._id == id) {
-                  answer = true;
-              }
-          });
-          return answer;
       },
 
       closeDialog(){
