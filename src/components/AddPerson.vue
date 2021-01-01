@@ -29,6 +29,9 @@
     <template v-slot:[`item.person.birthdate`]="{ item }">
       {{parseDate(item.person.birthdate)}}
     </template>
+    <template v-slot:[`item.person.gender`]="{ item }">
+      <v-icon>{{item.person.gender === 'W' ? 'mdi-face-woman': 'mdi-face'}}</v-icon>
+    </template>
     </v-data-table>
        <v-btn
         elevation="2"
@@ -105,16 +108,19 @@ export default {
             this.$emit('close-dialog');
         },
         parseDate(date){
+        if(date !== null){
          let newDate = new Date(date);
          moment.locale('de-ch')        
          return new moment(newDate).format('LL');
+        } else {
+          return ""
+        }
       },
       async addEventToPersons(){
         this.dialogSave = true
         await this.asyncForEach(this.selected, async(item) => { 
           this.event.event.participants.push(item._id) 
         });
-        console.log(this.event)
         await REST_interface.changeItemInCollection("events", this.event._id, {
         event: this.event.event
         })
@@ -129,6 +135,7 @@ export default {
       },
       async initialize (){
         await this.$store.dispatch('fetchPersons');
+        await this.$store.dispatch('fetchEvents');
       },
       async asyncForEach(array, callback) {
             for (let index = 0; index < array.length; index++) {

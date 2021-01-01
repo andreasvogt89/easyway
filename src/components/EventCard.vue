@@ -66,6 +66,8 @@
         </v-btn>
     </v-card-actions>
     <v-dialog
+          persistent
+          v-if="dialogEditEvent"
           v-model="dialogEditEvent"
           max-width="500px"
         >
@@ -85,6 +87,7 @@
         />
     </v-dialog>
     <v-dialog
+          persistent
           v-if="dialogPersons"
           v-model="dialogPersons"
         >
@@ -95,7 +98,9 @@
         />
     </v-dialog>
     <v-dialog
+          v-if="dialogAddDummy"
           v-model="dialogAddDummy"
+          persistent
         >
         <AddDummy
           :eventItem="event"

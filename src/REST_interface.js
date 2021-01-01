@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const host = 'http://localhost:8000';
+const host = 'https://gratissimum.duckdns.org:4443';
 
 class REST_interface {
     static isBackendRunning() {

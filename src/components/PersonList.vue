@@ -73,12 +73,6 @@
     <template v-slot:[`item.person.birthdate`]="{ item }">
       {{parseDate(item.person.birthdate)}}
     </template>
-    <template v-slot:[`item.person.phone`]="{ item }">
-      +41{{item.person.phone}}
-    </template>
-    <template v-slot:[`item.person.emergency_phone`]="{ item }">
-      +41{{item.person.emergency_phone}}
-    </template>
     <template v-slot:[`item.person.gender`]="{ item }">
       <v-icon>{{item.person.gender === 'W' ? 'mdi-face-woman': 'mdi-face'}}</v-icon>
     </template>
@@ -93,6 +87,7 @@
           v-if="dialogPersonActive"
           v-model="dialogPersonActive"
           max-width="600px"
+          persistent
         >
       <PersonDialog
       :dialogPerson="dialogPerson"
@@ -103,6 +98,7 @@
     <v-dialog
           v-if="dialogAddPersonActiv"
           v-model="dialogAddPersonActiv"
+          persistent
         >
         <AddPerson
         :eventItem="event_item"
@@ -177,9 +173,11 @@ export default {
     },
     computed: {
       getStoredPersons () {
-        if(this.eventView){
+        if(this.event_view){
+          let currentEvent = this.$store.getters.getEvents
+          .find(item => item._id === this.event_item._id);
           return this.$store.getters.getPersons.filter(
-          item => this.event_item.event.participants.includes(item._id))
+          item => currentEvent.event.participants.includes(item._id))
         } else {
         return this.$store.getters.getPersons.filter(
           item => item.person.firstname !== '#DUMMY')
@@ -208,7 +206,7 @@ export default {
         this.dialogPerson = {
           firstname:"",
           lastname:"",
-          gender:"",
+          gender:null,
           birthdate:"",
           email:"",
           phone:"",
@@ -224,7 +222,7 @@ export default {
       },
 
       parseDate(date){
-        if(date !== undefined){
+        if(date !== null){
          let newDate = new Date(date);
          moment.locale('de-ch')        
          return new moment(newDate).format('LL');

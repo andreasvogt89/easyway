@@ -16,7 +16,7 @@
     <v-footer
       v-if="this.$store.getters.loginState"
       color="secondary"
-      :fixed="this.$route.name === 'Events' ? false : true"
+      :fixed="this.$route.name === 'About' ? true : false"
     >
     <v-row
 
@@ -31,7 +31,7 @@
       <v-col
       cols="4"
       >
-      Token expires in: <strong>{{this.$store.getters.getTokenExpiresIn}}</strong>
+      Session expires in <strong>{{timeLeft}}</strong> 
       </v-col>
       <v-col
       cols="4"
@@ -59,6 +59,7 @@ export default {
   data () {
       return {
         reLoginActive : false,
+        timeLeft:"😑"
       }
     },
   async mounted(){
@@ -69,13 +70,27 @@ export default {
               await this.$store.dispatch('fetchEvents');
               await this.$store.dispatch('fetchPersons');
               this.reLoginActive = false;
+              this.tokenExpiresIn();
               await this.$router.replace('/');
+
               } else{
                 localStorage.removeItem('user');
                 await this.$router.replace({name: 'Login'});
                 this.reLoginActive = false;
               }
   },
+  methods:{
+    tokenExpiresIn(){
+      setInterval(() => {
+      let distance = new Date(this.$store.getters.getTokenExpiresAt).getTime() -
+                    new Date().getTime();
+                let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                this.timeLeft = hours + 'h : ' + minutes + 'min : ' + seconds + 's'
+      }, 1000);
+    }
+  }
 }
 </script>
 <style lang="scss">

@@ -133,7 +133,7 @@ export default {
   data() {
     return {
       event: this.eventItem,
-      error: false,
+      error: "",
       dialogSave: false,
       dummies: 0,
       loading: false,
@@ -172,19 +172,19 @@ export default {
             this.error = err;
           });
       }
+      if(this.error === ''){
       await REST_interface.changeItemInCollection("events", this.event._id ,{
         event: this.event.event
       })
       .then(()=>{
-            this.initialize();
-            this.dialogSave = false;
+            this.closeDialog();
       })
       .catch((err) => {
             this.error = err;
           });
-      if(this.error === ''){
-        this.closeDialog();
-      }              
+      }
+       this.initialize();
+       this.dialogSave = false;              
     },
     async initialize() {
       await this.$store.dispatch("fetchPersons");

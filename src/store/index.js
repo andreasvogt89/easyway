@@ -48,8 +48,10 @@ export default new Vuex.Store({
         setUser(state, data) {
             state.login.username = data.user[0].username;
             state.login.role = data.user[0].role;
-            state.login.expiresIn = data.expiresIn;
             state.login.isLoggedIn = true;
+        },
+        setExpiresAt(state, expiresAt) {
+            state.login.expiresAt = expiresAt
         },
         removeUser(state) {
             state.login.username = ""
@@ -68,9 +70,6 @@ export default new Vuex.Store({
         setPersons(state, persons) {
             state.persons = persons
         },
-        setTimeLeft(state, time) {
-            state.timeLeft = time
-        }
     },
     actions: {
         async login({ commit, dispatch }, user) {
@@ -78,6 +77,7 @@ export default new Vuex.Store({
                 .then(res => {
                     localStorage.setItem('user', JSON.stringify(res.data));
                     commit('setUser', res.data);
+                    commit('setExpiresAt', res.data.expiresAt);
                     dispatch('setLogoutTimer', res.data.expiresAt);
                 }).catch(err => {
                     commit('error', err);
@@ -86,6 +86,7 @@ export default new Vuex.Store({
         },
         async reLogin({ commit, dispatch }, data) {
             commit('setUser', data);
+            commit('setExpiresAt', data.expiresAt);
             dispatch('setLogoutTimer', data.expiresAt);
         },
         logout({ commit }) {
@@ -93,19 +94,15 @@ export default new Vuex.Store({
             localStorage.removeItem('user');
         },
         setLogoutTimer({ commit }, expirationAt) {
-            setTimeout(() => {
-                commit('removeUser');
-                router.replace('/');
-            }, 3600 * 3 * 1000);
             setInterval(() => {
                 let distance = new Date(expirationAt).getTime() -
                     new Date().getTime();
-                let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                let timeLeft = hours + ':' + minutes + ':' + seconds
-                commit('setTimeLeft', timeLeft)
-            }, 10);
+                if (distance < 0) {
+                    commit('removeUser');
+                    localStorage.removeItem('user');
+                    router.replace('/');
+                }
+            }, 1000);
 
         },
         async fetchEvents({ commit }) {
@@ -155,6 +152,9 @@ export default new Vuex.Store({
         getUsername: state => {
             return state.login.username
         },
+        getTokenExpiresAt: state => {
+            return state.login.expiresAt
+        },
         getUserRole: state => {
             return state.login.role
         },
@@ -166,9 +166,6 @@ export default new Vuex.Store({
         },
         getError: state => {
             return state.error
-        },
-        getTokenExpiresIn: state => {
-            return state.timeLeft
         },
         getEventNames: state => {
             return state.eventNames

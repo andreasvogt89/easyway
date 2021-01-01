@@ -46,7 +46,7 @@
                 v-model="pickerDate"
                 locale="de-ch"
                 :max="new Date().toISOString().substr(0, 10)"
-                min="1950-01-01"
+                min="1900-01-01"
 
                 @change="save"
                 ></v-date-picker>
@@ -72,7 +72,7 @@
             <v-col cols="12" sm="6">
                 <v-text-field
                     v-model="person.phone"
-                    :rules="[rules.number, rules.numberLength]"
+                  
                     outlined
                     label="Handy"
                 ></v-text-field>
@@ -80,7 +80,7 @@
             <v-col cols="12" sm="6">
                 <v-text-field
                     v-model="person.emergency_phone"
-                    :rules="[rules.number, rules.numberLength]"
+                    
                     outlined
                     label="Notfallnummer"
                 ></v-text-field>
@@ -108,24 +108,7 @@
             outlined
             label="Kommentar"
           ></v-text-field>
-        <v-row>
-         <v-col cols="12" sm="8">
-            <v-text-field
-                v-model="person.city"
-                outlined
-                label="Ort"
-            ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="4">
-          <v-text-field
-            v-model="person.postcode"
-            outlined
-            :rules="[rules.number, rules.postcode]"
-            label="Postleitzahl"
-          ></v-text-field>
-        </v-col>
-        </v-row>
-        <v-row>
+          <v-row>
          <v-col cols="12" sm="8">
             <v-text-field
                 v-model="person.street"
@@ -137,11 +120,29 @@
           <v-text-field
             v-model="person.street_number"
             outlined
-            :rules="[rules.number, rules.postcode]"
+            :rules="[rules.postcode]"
             label="Nr."
           ></v-text-field>
         </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="12" sm="4">
+          <v-text-field
+            v-model="person.postcode"
+            outlined
+            :rules="[rules.postcode]"
+            label="Postleitzahl"
+          ></v-text-field>
+        </v-col>
+         <v-col cols="12" sm="8">
+            <v-text-field
+                v-model="person.city"
+                outlined
+                label="Ort"
+            ></v-text-field>
+        </v-col>
+        </v-row>
+        
         <EventPicker 
         @push-events="setEvents($event)"
         :preEventSelection="events"  />
@@ -199,19 +200,17 @@ export default {
       return {
         error:"",
         dialogSave: false,
-        person_ID:"",
+        person_ID:null,
         person: this.dialogPerson,
         toEdit: this.editPerson,
         preEvent: this.preEventSelection,
         changedPersonID:null,
         events: [],
         menu: false,
-        pickerDate: "",
+        pickerDate: null,
         rules: {
-          required: value => !!value || 'Required.',
+          required: value => !!value || 'Üsfülle!!',
           counter: value => value.length <= 20 || 'Max 20 characters',
-          number: v => Number.isInteger(Number(v)) || 'Bisch du blööd?😂',
-          numberLength: v => v.length >= 10 || 'chli churz ni ? ',
           postcode: v => v.length <= 4 || 'chli läng, ni ? ',
           email: value => {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -230,12 +229,15 @@ export default {
         if(this.toEdit){
          this.person_ID = this.person._id;
          this.person = this.person.person;
-         this.pickerDate = new Date(this.person.birthdate).toISOString().substr(0, 10);
          this.events = this.getPersonEvents
+          if(this.person.birthdate){
+          this.pickerDate = new Date(this.person.birthdate).toISOString().substr(0, 10);
+          }
         } else {
           if(this.preEvent !== undefined){
             this.events.push(this.preEvent);
           }
+          this.person_ID = null;
         }   
   },
   computed: {
@@ -247,49 +249,51 @@ export default {
   methods: {
     async initialize () {
         await this.$store.dispatch('fetchPersons');
+        await this.$store.dispatch('fetchEvents');
     },
     async savePerson(){
         this.dialogSave = true
-        this.changedPersonID = "";
-        if(this.toEdit){
-          if(this.pickerDate !== ""){
+        if(this.pickerDate !== null){
             this.person.birthdate = new Date(this.pickerDate);
+          } else {
+            this.person.birthdate = null
           }
+        if(this.toEdit){
           await REST_interface.changeItemInCollection("persons", this.person_ID, {person:this.person}).then(()=>{
-            this.changedPersonID = this.person_ID;
-            }).catch(err=>{
+            }).then(()=>{}).catch(err=>{
               this.error = err;
-              this.dialogSave = false
             });
         } else {
-          if(this.pickerDate !== ""){
-            this.person.birthdate = new Date(this.pickerDate);
-          }
           await REST_interface.postToCollection("persons",{person:this.person}).then(resp=>{
-              this.changedPersonID = resp.data.newID
-            }).catch(err=>{
+              this.person_ID = resp.data.newID
+            }).then((
+            )=>{}).catch(err=>{
               this.error = err;
-              this.dialogSave = false
             });
         }
+        if(this.error === ""){
+        console.log(this.person_ID)
         await this.asyncForEach(this.$store.getters.getEvents,async (eventItem) =>{
-            if(this.events.find(item=> item._id === eventItem._id)){
-              if(!eventItem.event.participants.includes(this.changedPersonID)){
-                eventItem.event.participants.push(this.changedPersonID)
+            if(this.events.find(item => item._id === eventItem._id) === eventItem._id){
+              if(!eventItem.event.participants.includes(this.person_ID) && this.person_ID !== null){
+                eventItem.event.participants.push(this.person_ID)
               }
-            } else {
-              eventItem.event.participants.splice(eventItem.event.participants.indexOf(this.changedPersonID), 1);
+            } else if(eventItem.event.participants.includes(this.person_ID)) {
+              eventItem.event.participants.splice(eventItem.event.participants.indexOf(this.person_ID), 1);
+              
             }
             await REST_interface.changeItemInCollection("events", eventItem._id, {
               event: eventItem.event
+              }).then(()=>{ 
               }).catch((err) => {
                     this.error = err;
-                    this.dialogSave = false;
               });
-        });
+          });
+          this.closeDialog();
+        }
         this.initialize();
-        this.closeDialog();
         this.dialogSave = false;
+        
     },
     closeDialog(){
         this.$emit('close-dialog');
