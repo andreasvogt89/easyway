@@ -150,6 +150,7 @@ export default {
           { text: 'Geschlecht', value: 'person.gender' },
           { text: 'Alter', value: 'person.age' },
           { text: 'Geburtstag', value: 'person.birthdate' },
+          { text: 'Klasse', value: 'person.class' },
           { text: 'Kommentar', value: 'person.comments' },
           { text: 'Strasse', value: 'person.street' },
           { text: 'Strassennummer', value: 'person.street_number' },

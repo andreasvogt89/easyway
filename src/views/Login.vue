@@ -17,6 +17,8 @@
   <v-form
   class="ma-10 justify-center"
   >
+  <v-row class="justify-center">
+    <v-col cols="6" sm="6">
       <v-text-field
       color="accent"
       prepend-inner-icon="mdi-account-box"
@@ -26,7 +28,11 @@
       max-width="50px"
       >
     </v-text-field>
-    <v-text-field
+    </v-col>
+    </v-row>
+    <v-row class="justify-center">
+      <v-col cols="6" sm="6">
+      <v-text-field
       color="accent"
       solo
       :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
@@ -36,7 +42,9 @@
       v-model="input.password" 
       placeholder="Password.."
       @keyup.enter="executeLogin">
-    </v-text-field>
+      </v-text-field>
+      </v-col>
+    </v-row>
   </v-form>
     <v-btn
         width="100px"
@@ -77,13 +85,17 @@ export default {
           password: this.input.password,
         });
         if(this.$store.getters.loginState){
-          await this.$router.replace({name: 'Events'});
+          await this.$router.replace("/");
         } else {
           await this.$store.dispatch('logout')
           localStorage.removeItem('user');
+          if(this.input.message == "That's wrong 🙄... try again 🙂"){
+            this.input.message = "You loser.. wrong again🤭"
+          } else {
           this.input.message = "That's wrong 🙄... try again 🙂"
+          }
         }
-         this.loginActive = false;
+        this.loginActive = false;
     },
   },
 

@@ -69,15 +69,16 @@ export default {
               await this.$store.dispatch('reLogin', user);
               await this.$store.dispatch('fetchEvents');
               await this.$store.dispatch('fetchPersons');
-              this.reLoginActive = false;
               this.tokenExpiresIn();
+              this.reLoginActive = false;
               await this.$router.replace('/');
-
               } else{
                 localStorage.removeItem('user');
-                await this.$router.replace({name: 'Login'});
                 this.reLoginActive = false;
+                await this.$router.replace({name: 'Login'});
+                
               }
+      
   },
   methods:{
     tokenExpiresIn(){

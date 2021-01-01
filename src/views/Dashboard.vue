@@ -136,12 +136,14 @@ export default {
       avarageAge(){
         let ages = []; 
         this.$store.getters.getPersons.forEach(item=>{
-            ages.push(item.person.age);
-        })
+            if(item.person.age !== undefined){
+                ages.push(item.person.age)
+            }
+        });
         if(ages.length > 2){
             return Math.round(ages.reduce((a, b) => a + b) / ages.length)
         }
-            return "NO DATA"
+            return ""
       }
     },
 
