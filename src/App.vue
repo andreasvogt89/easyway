@@ -16,7 +16,6 @@
     <v-footer
       v-if="this.$store.getters.loginState"
       color="secondary"
-      :fixed="this.$route.name === 'About' ? true : false"
     >
     <v-row
 

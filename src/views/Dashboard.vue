@@ -144,7 +144,7 @@ export default {
             return Math.round(ages.reduce((a, b) => a + b) / ages.length)
         }
             return ""
-      }
+      },
     },
 
 }

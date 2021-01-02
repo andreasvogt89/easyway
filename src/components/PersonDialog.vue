@@ -272,22 +272,21 @@ export default {
             });
         }
         if(this.error === ""){
-        console.log(this.person_ID)
+        let validEvents = [];
+        this.events.forEach(item=>{
+          validEvents.push(item._id);
+        }) 
         await this.asyncForEach(this.$store.getters.getEvents,async (eventItem) =>{
-            if(this.events.find(item => item._id === eventItem._id) === eventItem._id){
-              if(!eventItem.event.participants.includes(this.person_ID) && this.person_ID !== null){
+            if(validEvents.includes(eventItem._id)){
+              if(!eventItem.event.participants.includes(this.person_ID)){
                 eventItem.event.participants.push(this.person_ID)
+                this.updateEvent(eventItem);
               }
             } else if(eventItem.event.participants.includes(this.person_ID)) {
-              eventItem.event.participants.splice(eventItem.event.participants.indexOf(this.person_ID), 1);
-              
+                eventItem.event.participants.splice(eventItem.event.participants.indexOf(this.person_ID), 1);
+                this.updateEvent(eventItem);
             }
-            await REST_interface.changeItemInCollection("events", eventItem._id, {
-              event: eventItem.event
-              }).then(()=>{ 
-              }).catch((err) => {
-                    this.error = err;
-              });
+            
           });
           this.closeDialog();
         }
@@ -309,6 +308,14 @@ export default {
         await callback(array[index], index, array);
       }
     },
+    async updateEvent(eventItem){
+      await REST_interface.changeItemInCollection("events", eventItem._id, {
+              event: eventItem.event
+              }).then(()=>{ 
+              }).catch((err) => {
+                    this.error = err;
+              });
+    }
   },
 }
 </script>
