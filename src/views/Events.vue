@@ -6,6 +6,7 @@
       :items="getStoredEvents"
       :search="search"
       hide-default-footer
+      disable-pagination
     >
       <template v-slot:header>
         <v-toolbar
