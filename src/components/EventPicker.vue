@@ -1,7 +1,7 @@
 <template>
     <v-card
     class="mx-auto"
-    max-width="500"
+    max-width="700"
   >
     <v-toolbar
       flat
@@ -21,16 +21,22 @@
           :key="selection._id"
           class="shrink"
         >
-          <v-chip
+         <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+           <v-chip
+            v-bind="attrs"
+            v-on="on"
             class="accent"
             :disabled="loading"
             close
             @click:close="refreshSelectionEvents(selection, i)"
           >
-            {{ selection.event.name }}
+          {{selection.event.name }}
           </v-chip>
+          </template>
+          <span>{{parseDate(selection.event.eventDate)}}</span>
+        </v-tooltip>
         </v-col>
-
         <v-col
           v-if="!allSelected"
           cols="12"

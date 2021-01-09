@@ -5,6 +5,8 @@
     <v-data-iterator
       :items="getStoredEvents"
       :search="search"
+      :sort-by="propMap.get(sortBy)"
+      :sort-desc="sortDesc"
       hide-default-footer
       disable-pagination
     >
@@ -15,6 +17,7 @@
         >
           <v-text-field
             v-model="search"
+            class="ma-2"
             clearable
             flat
             solo-inverted
@@ -23,14 +26,49 @@
             label="Suche"
           >
           </v-text-field>
+          <template>
+            <v-spacer></v-spacer>
+            <v-select
+              class="ma-2"
+              color="accent"
+              v-model="sortBy"
+              flat
+              solo-inverted
+              hide-details
+              :items="keys"
+              label="Sort by"
+            ></v-select>
+            <v-spacer></v-spacer>
+            <v-btn-toggle
+              
+              v-model="sortDesc"
+              mandatory
+            >
+              <v-btn
+                large
+                depressed
+                :value="false"
+              >
+                <v-icon>mdi-arrow-up</v-icon>
+              </v-btn>
+              <v-btn
+                large
+                depressed
+                :value="true"
+              >
+                <v-icon>mdi-arrow-down</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+          </template>
           <v-btn
         @click="dialogEventActive = true"
-        class="ma-10"
+        class="ma-3"
         >Neues Event</v-btn>
         </v-toolbar>
       </template >
       <template v-slot:item="props" >
          <EventCard 
+         class="ma-8"
          :event="props.item"
          :calendar_view="false"
           />
@@ -70,6 +108,15 @@ export default {
    data () {
       return {
         search: '',
+        sortDesc: false,
+        sortBy: 'Datum',
+        keys: [
+          'Eventtyp',
+          'Datum',
+          'Kommentar',
+          'Wo',
+          'Anzahl Personen',
+        ],
         dialogEventActive: false,
         dialogEvent:{
           eventDate: "",
@@ -78,10 +125,16 @@ export default {
           participants: [],
           comments:"",
         },
+        propMap: new Map(),
       }
   },
   created(){
     this.initialize();
+    this.propMap.set('Eventtyp', 'name');
+    this.propMap.set('Datum', 'sortDate');
+    this.propMap.set('Kommentar', 'comments');
+    this.propMap.set('Wo', 'place');
+    this.propMap.set('Anzahl Personen', 'participants');
   },
   methods: {
     async initialize () {

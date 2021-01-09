@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import REST_interface from "@/REST_interface";
 import router from '@/router/index'
+import moment from "moment";
+moment.locale('de-ch')
 
 Vue.use(Vuex)
 
@@ -20,6 +22,7 @@ export default new Vuex.Store({
         backend: "",
         eventNames: [
             "Jugendtreff L'Dorf",
+            "Jugendtreff L'Dorf Kids",
             "Summerlounge L'Dorf",
             "Summerlounge Rüttenen",
             "Summerlounge Oberdorf",
@@ -111,8 +114,11 @@ export default new Vuex.Store({
                     //get inner properties for search perpeses
                     res.data.forEach(element => {
                         element.name = element.event.name;
-                        element.eventDate = element.event.eventDate;
+                        element.eventDate = new moment(element.event.eventDate).format('LL');
+                        element.sortDate = new Date(element.event.eventDate).getTime();
                         element.place = element.event.place;
+                        element.participants = element.event.participants.length
+                        element.comments = element.event.comments
                     });
                     commit('setEvents', res.data);
                 }).catch(err => {

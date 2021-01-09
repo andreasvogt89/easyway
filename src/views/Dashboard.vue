@@ -75,7 +75,7 @@
           color="accent"
           v-model="selectedEvents"
           :items="eventNames"
-          label="Event typen"
+          label="Eventtypen"
           multiple
         >
         </v-combobox>
@@ -111,13 +111,17 @@ export default {
         selectedEvents: [],
       }
      },
+    async created(){
+      await this.$store.dispatch('fetchEvents');
+      await this.$store.dispatch('fetchPersons');
+    },
     methods:{
         async downloadExcel(){
         this.loading = true;
         let newDate = new Date();
         moment.locale('de-ch'); 
         let fileName = "Statistik " + new moment(newDate).format('LL');
-        await REST_interface.createPersonExcel(fileName, this.selectedEvents).then(()=>{
+        await REST_interface.createStatisticExcel(fileName, this.selectedEvents).then(()=>{
           this.loading = false;
         }).catch(err=>{
           this.loading = false;

@@ -53,6 +53,15 @@
             >
               Add Bestehendi Lappe
       </v-btn>
+      <v-btn
+              color="primary"
+              dark
+              v-if="!event_view"
+              class="ma-2"
+              @click="downloadExcel()"
+            >
+               <v-icon>mdi-file-excel-outline</v-icon>
+      </v-btn>
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
@@ -86,7 +95,7 @@
     <v-dialog
           v-if="dialogPersonActive"
           v-model="dialogPersonActive"
-          max-width="600px"
+          max-width="800px"
           persistent
         >
       <PersonDialog
@@ -125,6 +134,7 @@ import DeleteItemDialog from "@/components/DeleteItemDialog.vue";
 import PersonDialog from "@/components/PersonDialog.vue";
 import AddPerson from "@/components/AddPerson.vue";
 import moment from "moment";
+import REST_interface from "@/REST_interface";
 
 export default {
     name: 'PersonList',
@@ -235,7 +245,20 @@ export default {
       closeDialog(){
         this.initialize();
         this.$emit('close-dialog');
-      }
+      },
+
+      async downloadExcel(){
+        this.loading = true;
+        let newDate = new Date();
+        moment.locale('de-ch'); 
+        let fileName = "Alle Personen " + new moment(newDate).format('LL');
+        await REST_interface.createPersonExcel(fileName).then(()=>{
+          this.loading = false;
+        }).catch(err=>{
+          this.loading = false;
+          console.log(err);
+        })
+      },
     }
 } 
 </script>

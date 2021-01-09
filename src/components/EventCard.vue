@@ -1,7 +1,5 @@
 <template>
-  <v-container>
     <v-card
-    class="ma-10"
     color="secondary"
     :loading="waitForApi"
     :disabled="waitForApi"
@@ -117,7 +115,7 @@
       </v-btn>
     </div>
     </v-card>
-  </v-container>
+  
 </template>
 <script>
 import REST_interface from "@/REST_interface";

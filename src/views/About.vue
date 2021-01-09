@@ -34,7 +34,7 @@
       </v-col>
     </v-row>
     <v-card-subtitle>
-      MIT License Copyright (©) by Andreas Vogt
+      MIT License Copyright © by Andreas Vogt
     </v-card-subtitle>
      <v-card-text class="white--text pt-3">
 Permission is hereby granted, free
@@ -63,7 +63,7 @@ THE SOFTWARE.
       <v-divider></v-divider>
 
       <v-card-text class="white--text">
-        {{ new Date().getFullYear() }} — EASY WAY<strong> v0.0.1</strong>
+        {{ new Date().getFullYear() }} — EASY WAY<strong> v0.0.2~</strong>
       </v-card-text>
   </v-card>
   </v-container>

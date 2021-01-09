@@ -108,7 +108,26 @@ class REST_interface {
     }
 
     // Get Excel sheet for all Persons
-    static createPersonExcel(fileName, eventNames) {
+    static createPersonExcel(fileName) {
+        return new Promise(((resolve, reject) =>
+            axios.get(host + '/export/excel/persons', {
+                responseType: 'arraybuffer',
+                headers: {
+                    'filename': fileName,
+                    'Authorization': "Bearer " +
+                        JSON.parse(localStorage.getItem('user')).accessToken,
+                },
+            }).then((res) => {
+                resolve(
+                    this.forceFileDownload(res, fileName)
+                );
+            }).catch((err) => {
+                reject(err);
+            })))
+    }
+
+    // Get Excel sheet for all Persons
+    static createStatisticExcel(fileName, eventNames) {
         return new Promise(((resolve, reject) =>
             axios.post(host + '/export/excel/statistic', { eventNames: eventNames }, {
                 responseType: 'arraybuffer',

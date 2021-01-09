@@ -61,7 +61,7 @@ export default {
         timeLeft:"😑"
       }
     },
-  async mounted(){
+  async created(){
       this.reLoginActive = true;
             if(localStorage.getItem('user') !== null){ 
               let user = JSON.parse(localStorage.getItem('user'));
@@ -75,9 +75,7 @@ export default {
                 localStorage.removeItem('user');
                 this.reLoginActive = false;
                 await this.$router.replace({name: 'Login'});
-                
               }
-      
   },
   methods:{
     tokenExpiresIn(){

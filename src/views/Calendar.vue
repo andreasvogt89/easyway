@@ -90,7 +90,7 @@
         <v-dialog
           v-model="selectedOpen"
         >
-         <EventCard 
+         <EventCard
          :event="selectedEvent"
          :calendar_view="true"
           @close-event="closeEvent()" />
