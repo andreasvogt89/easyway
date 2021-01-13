@@ -108,7 +108,7 @@ export default {
    data () {
       return {
         search: '',
-        sortDesc: false,
+        sortDesc: true,
         sortBy: 'Datum',
         keys: [
           'Eventtyp',

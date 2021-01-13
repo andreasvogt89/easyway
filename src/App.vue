@@ -30,7 +30,6 @@
       <v-col
       cols="4"
       >
-      Session expires in <strong>{{timeLeft}}</strong> 
       </v-col>
       <v-col
       cols="4"
@@ -58,7 +57,6 @@ export default {
   data () {
       return {
         reLoginActive : false,
-        timeLeft:"😑"
       }
     },
   async created(){
@@ -68,7 +66,6 @@ export default {
               await this.$store.dispatch('reLogin', user);
               await this.$store.dispatch('fetchEvents');
               await this.$store.dispatch('fetchPersons');
-              this.tokenExpiresIn();
               this.reLoginActive = false;
               await this.$router.replace('/');
               } else{
@@ -77,18 +74,6 @@ export default {
                 await this.$router.replace({name: 'Login'});
               }
   },
-  methods:{
-    tokenExpiresIn(){
-      setInterval(() => {
-      let distance = new Date(this.$store.getters.getTokenExpiresAt).getTime() -
-                    new Date().getTime();
-                let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                this.timeLeft = hours + 'h : ' + minutes + 'min : ' + seconds + 's'
-      }, 1000);
-    }
-  }
 }
 </script>
 <style lang="scss">
