@@ -57,6 +57,78 @@
        </v-badge>
        <p>∅ Alter</p>
       </v-col>
+      <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="avaragePartiPerWeek"
+       >
+       <v-icon>mdi-chart-line</v-icon>
+       </v-badge>
+       <p>∅ B/W </p>
+      </v-col>
+  </v-row>
+  <v-row class="ma-1">
+    <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Langendorf').length"
+       >
+       <v-icon>mdi-counter</v-icon>
+       </v-badge>
+       <p>Langendorf</p>
+      </v-col>
+      <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Oberdorf').length"
+       >
+       <v-icon>mdi-counter</v-icon>
+       </v-badge>
+       <p>Oberdorf</p>
+      </v-col>
+      <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Bellach').length"
+       >
+       <v-icon>mdi-counter</v-icon>
+       </v-badge>
+       <p>Bellach</p>
+      </v-col>
+      <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Rüttenen').length"
+       >
+       <v-icon>mdi-counter</v-icon>
+       </v-badge>
+       <p>Rüttenen</p>
+      </v-col>
+      <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Solothurn').length"
+       >
+       <v-icon>mdi-counter</v-icon>
+       </v-badge>
+       <p>Solothurn</p>
+      </v-col>
+      <v-col cols=12 sm="2">
+       <v-badge
+          class="ma-3"
+          color="accent"
+          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Bettlach').length"
+       >
+       <v-icon>mdi-counter</v-icon>
+       </v-badge>
+       <p>Bettlach</p>
+      </v-col>
   </v-row>
   <v-divider class="mx-4"></v-divider>
     <v-card-title >
@@ -114,6 +186,7 @@ export default {
     async created(){
       await this.$store.dispatch('fetchEvents');
       await this.$store.dispatch('fetchPersons');
+      
     },
     methods:{
         async downloadExcel(){
@@ -128,6 +201,18 @@ export default {
           console.log(err);
         })
       },
+    addDays(date, days) {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+    },
+
+    getMonday(d) {
+    d = new Date(d);
+    let day = d.getDay(),
+        diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
+    },
     },
     computed: {
       eventNames () {
@@ -149,6 +234,24 @@ export default {
         }
             return ""
       },
+      avaragePartiPerWeek(){
+        if(this.$store.getters.getEvents.length > 1){
+        let firstEvent = this.$store.getters.getEvents.slice().sort((a, b) => b.event.eventDate - a.event.eventDate);
+        let weeks = [];
+        for (let i = this.getMonday(firstEvent[0].event.eventDate); i <= new Date(); i = this.addDays(i, 7)) {
+            let currentEvents = firstEvent.filter(item =>
+                (new Date(item.event.eventDate).getTime() >= i.getTime() &&
+                    new Date(item.event.eventDate).getTime() < this.addDays(i, 7).getTime()));
+            currentEvents.forEach(item=>{
+              weeks.push(item.event.participants.length)
+            });
+          }
+            return Math.round(weeks.reduce((a, b) => a + b) / weeks.length)
+        } else {
+            return ""
+        }
+            
+      }
     },
 
 }
