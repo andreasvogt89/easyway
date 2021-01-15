@@ -242,9 +242,12 @@ export default {
             let currentEvents = firstEvent.filter(item =>
                 (new Date(item.event.eventDate).getTime() >= i.getTime() &&
                     new Date(item.event.eventDate).getTime() < this.addDays(i, 7).getTime()));
+        
+            let week = 0;
             currentEvents.forEach(item=>{
-              weeks.push(item.event.participants.length)
+              week = week + item.event.participants.length
             });
+            weeks.push(week);
           }
             return Math.round(weeks.reduce((a, b) => a + b) / weeks.length)
         } else {
