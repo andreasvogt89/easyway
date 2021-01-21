@@ -24,32 +24,23 @@
                 ></v-text-field>
             </v-col>
             </v-row>
-            <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-            >
-                <template v-slot:activator="{ on, attrs }">
-                <v-text-field
+            <v-row>
+            <v-col cols="12" sm="6">
+              <v-text-field
                     v-model="pickerDate"
-                    label="Geburtstag"
-                    prepend-icon="mdi-calendar"
-                    v-bind="attrs"
-                    v-on="on"
+                    outlined
+                    label="Geburtstag DD.MM.JJJJ"
+                    required
                 ></v-text-field>
-                </template>
-                <v-date-picker
-                no-title
-                v-model="pickerDate"
-                locale="de-ch"
-                :max="new Date().toISOString().substr(0, 10)"
-                min="1900-01-01"
-                @change="save"
-                ></v-date-picker>
-            </v-menu>
+            </v-col>
+            <v-col cols="12" sm="6">
+             <v-text-field
+                    v-model="person.class"
+                    outlined
+                    label="Klasse"
+                ></v-text-field>
+            </v-col>
+            </v-row>
           <div>
            <v-btn
            x-large 
@@ -96,18 +87,11 @@
             </v-col>
             <v-col cols="12" sm="6">         
                 <v-text-field
-                    v-model="person.class"
-                    outlined
-                    label="Klasse"
-                ></v-text-field>
+                v-model="person.comments"
+                outlined
+                label="Kommentar"
+              ></v-text-field>
             </v-col>
-          </v-row>
-          <v-text-field
-            v-model="person.comments"
-            outlined
-            label="Kommentar"
-          ></v-text-field>
-          <v-row>
          <v-col cols="12" sm="8">
             <v-text-field
                 v-model="person.street"
@@ -141,10 +125,19 @@
             ></v-text-field>
         </v-col>
         </v-row>
-        
-        <EventPicker 
-        @push-events="setEvents($event)"
-        :preEventSelection="events"  />
+        <v-expansion-panels
+          multiple
+          popout
+        >
+          <v-expansion-panel>
+             <v-expansion-panel-header class="title">Eventpicker</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <EventPicker
+              @push-events="setEvents($event)"
+              :preEventSelection="events"  />
+              </v-expansion-panel-content>
+          </v-expansion-panel>
+         </v-expansion-panels>
         </v-form>
         <v-btn
         elevation="2"
@@ -215,6 +208,10 @@ export default {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return pattern.test(value) || 'Mail adresse bitte'
           },
+          birthday: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Mail adresse bitte'
+          },
         },
 
       }
@@ -230,7 +227,7 @@ export default {
          this.person = this.person.person;
          this.events = this.getPersonEvents
           if(this.person.birthdate){
-          this.pickerDate = new Date(this.person.birthdate).toISOString().substr(0, 10);
+            this.parseBirthdate(this.person.birthdate);
           }
         } else {
           if(this.preEvent !== undefined){
@@ -251,9 +248,13 @@ export default {
         await this.$store.dispatch('fetchEvents');
     },
     async savePerson(){
-        this.dialogSave = true
+        this.dialogSave = true;
         if(this.pickerDate !== null){
-            this.person.birthdate = new Date(this.pickerDate);
+            try {
+            this.person.birthdate = this.reverseParseDate(this.pickerDate);
+            } catch(err){
+              this.error = err;
+            }
           } else {
             this.person.birthdate = null
           }
@@ -314,6 +315,17 @@ export default {
               }).catch((err) => {
                     this.error = err;
               });
+    },
+    parseBirthdate(date){
+      let dates = new Date(date).toISOString().substr(0, 10).split('-');
+      this.pickerDate = dates[2] + "." + dates[1] + "." + dates[0]
+    },
+    reverseParseDate(date){
+      let dates = date.split('.');
+      let d = new Date(dates[2] + "-" + dates[1] + "-" + dates[0]);
+      if(d instanceof Date && !isNaN(d)){
+        return d
+      } else throw new Error("This is not güet format für geburi!"); 
     }
   },
 }

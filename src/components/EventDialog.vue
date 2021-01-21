@@ -9,6 +9,7 @@
             :items="eventNames"
             label="Event"
             required
+            item-color="accent"
             outlined
           ></v-select>
           <v-menu

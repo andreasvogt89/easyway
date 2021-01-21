@@ -30,7 +30,7 @@
             <v-spacer></v-spacer>
             <v-select
               class="ma-2"
-              color="accent"
+              item-color="accent"
               v-model="sortBy"
               flat
               solo-inverted
@@ -40,7 +40,6 @@
             ></v-select>
             <v-spacer></v-spacer>
             <v-btn-toggle
-              
               v-model="sortDesc"
               mandatory
             >

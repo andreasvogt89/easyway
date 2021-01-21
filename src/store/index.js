@@ -82,6 +82,7 @@ export default new Vuex.Store({
                     commit('setUser', res.data);
                     commit('setExpiresAt', res.data.expiresAt);
                     dispatch('setLogoutTimer', res.data.expiresAt);
+                    router.replace('/');
                 }).catch(err => {
                     commit('error', err);
                 });
@@ -91,6 +92,7 @@ export default new Vuex.Store({
             commit('setUser', data);
             commit('setExpiresAt', data.expiresAt);
             dispatch('setLogoutTimer', data.expiresAt);
+            router.replace('/');
         },
         logout({ commit }) {
             commit('removeUser');
@@ -103,7 +105,7 @@ export default new Vuex.Store({
                 if (distance < 0) {
                     commit('removeUser');
                     localStorage.removeItem('user');
-                    router.replace('/');
+                    router.replace('/login');
                 }
             }, 1000);
 

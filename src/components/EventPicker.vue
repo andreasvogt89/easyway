@@ -7,7 +7,6 @@
       flat
       color="transparent"
     >
-      <v-toolbar-title>Event Picker</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
 
@@ -42,13 +41,16 @@
           cols="12"
         >
           <v-text-field
-            ref="search"
             v-model="search"
-            full-width
+            class="ma-2"
+            clearable
+            flat
+            solo-inverted
             hide-details
-            label="Suchen.."
-            single-line
-          ></v-text-field>
+            prepend-inner-icon="mdi-magnify"
+            label="Suche nach Datum"
+          >
+          </v-text-field>
         </v-col>
       </v-row>
     </v-container>
@@ -95,10 +97,10 @@ export default {
         return this.items.length === 0
       },
       categories () { 
-        const search = this.search.toLowerCase()
+        const search = this.search
         if (!search) return this.items
         return this.items.filter(item => {
-          const text = item.event.name.toLowerCase()
+          const text = this.parseDate(item.event.eventDate).toString()
           return text.indexOf(search) > -1
         })
       },

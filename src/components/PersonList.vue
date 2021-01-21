@@ -6,13 +6,16 @@
   >
     <v-card-title>
       <v-text-field
-        v-model="search" 
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
-     
+            v-model="search"
+            class="ma-2"
+            clearable
+            flat
+            solo-inverted
+            hide-details
+            prepend-inner-icon="mdi-magnify"
+            label="Suche"
+          >
+          </v-text-field>
       <v-btn
             v-if="eventView"
             @click="closeDialog()"

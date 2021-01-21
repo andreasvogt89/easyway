@@ -67,7 +67,6 @@ export default {
               await this.$store.dispatch('fetchEvents');
               await this.$store.dispatch('fetchPersons');
               this.reLoginActive = false;
-              await this.$router.replace('/');
               } else{
                 localStorage.removeItem('user');
                 this.reLoginActive = false;
