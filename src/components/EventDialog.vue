@@ -44,7 +44,7 @@
           class="ma-3"
           label="Wo?"
           ></v-text-field>
-          <v-textarea 
+          <v-textarea
           v-model="event.comments" 
           outlined
           class="ma-3"

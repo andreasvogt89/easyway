@@ -88,16 +88,18 @@ export default new Vuex.Store({
                 });
 
         },
+
         async reLogin({ commit, dispatch }, data) {
             commit('setUser', data);
             commit('setExpiresAt', data.expiresAt);
             dispatch('setLogoutTimer', data.expiresAt);
-            router.replace('/');
         },
+
         logout({ commit }) {
             commit('removeUser');
             localStorage.removeItem('user');
         },
+
         setLogoutTimer({ commit }, expirationAt) {
             setInterval(() => {
                 let distance = new Date(expirationAt).getTime() -
@@ -110,6 +112,7 @@ export default new Vuex.Store({
             }, 1000);
 
         },
+
         async fetchEvents({ commit }) {
             await REST_interface.getCollection("events")
                 .then(res => {

@@ -30,9 +30,18 @@
         </v-chip>
     </v-card-subtitle>
     </div>
-    <v-divider class="mx-4"></v-divider>
-    <v-card-text class="text-md-body-1" >{{event.event.comments}}</v-card-text>
-    <v-divider class="ma-4"></v-divider>
+       <v-textarea
+        class="text-md-body-1 ma-3"
+        no-resize
+        outlined
+        background-color="secondary"
+        auto-grow
+        v-model="event.event.comments"
+        readonly
+        disabled
+        >
+       </v-textarea>
+    <v-divider class="ma-2"></v-divider>
     <v-card-actions
     class="ma-1"
     >
