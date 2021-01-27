@@ -76,17 +76,19 @@ export default new Vuex.Store({
     },
     actions: {
         async login({ commit, dispatch }, user) {
+            let answer = false;
             await REST_interface.login(user)
                 .then(res => {
                     localStorage.setItem('user', JSON.stringify(res.data));
                     commit('setUser', res.data);
                     commit('setExpiresAt', res.data.expiresAt);
                     dispatch('setLogoutTimer', res.data.expiresAt);
+                    answer = true
                     router.replace('/');
                 }).catch(err => {
                     commit('error', err);
                 });
-
+            return answer
         },
 
         async reLogin({ commit, dispatch }, data) {

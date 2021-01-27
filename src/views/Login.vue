@@ -80,22 +80,18 @@ export default {
   methods: {
     async executeLogin() {
        this.loginActive = true;
-       await this.$store.dispatch('login', {
+     const answer = await this.$store.dispatch('login', {
           username: this.input.username,
           password: this.input.password,
-        });
-        if(this.$store.getters.loginState){
-          await this.$router.replace("/");
-        } else {
-          await this.$store.dispatch('logout')
-          localStorage.removeItem('user');
-          if(this.input.message == "That's wrong 🙄... try again 🙂"){
+      });
+      if(!answer){
+        if(this.input.message == "That's wrong 🙄... try again 🙂"){
             this.input.message = "You loser.. wrong again🤭"
           } else {
           this.input.message = "That's wrong 🙄... try again 🙂"
-          }
         }
-        this.loginActive = false;
+      }
+      this.loginActive = false;
     },
   },
 
