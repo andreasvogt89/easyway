@@ -82,6 +82,8 @@
           :events="events"
           :event-color="getEventColor"
           :type="type"
+          :weekdays='days'
+          locale="de-Ch"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
@@ -115,6 +117,7 @@ import EventCard from "@/components/EventCard.vue"
         day: 'Day',
         '4day': '4 Days',
       },
+      days: [1, 2, 3, 4, 5, 6, 0],
       selectedEvent: {},
       selectedOpen: false,
       events: [],
