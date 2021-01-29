@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <v-card class="secondary ma-2 pa-3">
-      <h3>Neui Statistik Lappe erfasse</h3>
+    <v-card class="secondary">
+      <div class="ma-2">
+      <v-card-title >Neui Statistik Lappe erfasse</v-card-title>
       <v-form>
         <div>
           <v-btn
@@ -120,8 +120,8 @@
           Okay
         </v-btn>
       </v-alert>
+      </div>
     </v-card>
-  </v-container>
 </template>
 <script>
 import REST_interface from "@/REST_interface";

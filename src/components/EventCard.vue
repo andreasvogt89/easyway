@@ -84,6 +84,7 @@
       @close-dialog="dialogEditEvent = false" />
     </v-dialog>
     <v-dialog
+          max-width="500px"
           v-model="dialogDeleteEvent"
           v-if="dialogDeleteEvent"
         >
@@ -108,6 +109,7 @@
           v-if="dialogAddDummy"
           v-model="dialogAddDummy"
           persistent
+          max-width="60%"
         >
         <AddDummy
           :eventItem="event"
@@ -160,7 +162,7 @@ export default {
     parseDate(date){
          let newDate = new Date(date);
          moment.locale('de-ch')        
-         return new moment(newDate).format('LL');
+         return new moment(newDate).format('dddd') + " " + new moment(newDate).format('LL');
       },
     async downloadExcel(event){
         this.waitForAPI = true;

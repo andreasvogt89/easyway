@@ -85,7 +85,6 @@ import axios from 'axios';
           headers: {
             Accept: "application/json"
             }}).then(res=>{
-          console.log(res)
           this.dadJoke = res.data.joke
         }
         ).catch(()=>{

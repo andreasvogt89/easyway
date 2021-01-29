@@ -116,7 +116,7 @@ export default {
       parseDate(date){
          let newDate = new Date(date);
          moment.locale('de-ch')        
-         return new moment(newDate).format('LL');
+         return  new moment(newDate).format('dddd') + " " + new moment(newDate).format('LL');
       },
       pushEvents(){
         this.$emit('push-events', this.selected);

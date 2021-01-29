@@ -7,7 +7,7 @@
   <div class="about">
     <h1>Listen you sonofabitch</h1>
     <h3>This is the ultimate high to the top shit eksöl</h3>
-    <img src="https://media.giphy.com/media/uxXNV3Xa7QqME/source.gif" />
+    <img :src="giphyUrl" />
   </div>
   </v-card>
   <v-card
@@ -68,6 +68,37 @@ THE SOFTWARE.
   </v-card>
   </v-container>
 </template>
+<script>
+import axios from 'axios';
+
+export default {
+  name:"About",
+  data(){
+    return {
+      giphyUrl: "",
+    }
+  },
+  created(){
+    this.fetchGiphy()
+  },
+  methods:{
+    async fetchGiphy(){
+        await axios.get("https://api.giphy.com/v1/gifs/random",
+        {params:{
+         api_key:'',
+        }
+        }).then(res=>{
+          console.log(res)
+          this.giphyUrl = res.data.data.image_url
+        }
+        ).catch(()=>{
+          
+        })
+    }
+  }
+  
+}
+</script>
 <style scoped>
 .about{
   color: #08a20d;

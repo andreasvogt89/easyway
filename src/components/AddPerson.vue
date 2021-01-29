@@ -1,16 +1,19 @@
 <template>
-    <v-container>
   <v-card
   class="secondary"
   >
     <v-card-title>
       <v-text-field
-        v-model="search" 
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+            v-model="search"
+            class="ma-2"
+            clearable
+            flat
+            solo-inverted
+            hide-details
+            prepend-inner-icon="mdi-magnify"
+            label="Suche"
+          >
+          </v-text-field>
     </v-card-title>
     <v-data-table
       class="secondary"
@@ -23,9 +26,6 @@
       :loading="loading"
       loading-text="Heb chli geduld"
     >
-    <template v-slot:top>
-        <h3>Add Bestehendi Lappe to <strong class="accent--text">{{event.event.name}}</strong></h3>
-    </template>
     <template v-slot:[`item.person.birthdate`]="{ item }">
       {{parseDate(item.person.birthdate)}}
     </template>
@@ -67,7 +67,6 @@
           </v-btn>
     </v-alert>
   </v-card>
-</v-container>
 </template>
 <script>
 import moment from "moment";

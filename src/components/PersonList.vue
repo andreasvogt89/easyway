@@ -1,6 +1,5 @@
 <template>
 <div>
-<v-container>
   <v-card
   class="secondary"
   >
@@ -26,7 +25,7 @@
         </v-btn>
     </v-card-title>
     <v-data-table
-      class="secondary"
+      class="ma-2 secondary"
       :headers="headers"
       :items="getStoredPersons"
       :search="search"
@@ -114,8 +113,7 @@
         >
         <AddPerson
         :eventItem="event_item"
-        @close-dialog="dialogAddPersonActiv = false" />
-        />   
+        @close-dialog="dialogAddPersonActiv = false" />   
     </v-dialog>
     <v-dialog
           v-model="dialogDeletePerson"
@@ -128,7 +126,6 @@
         />
     </v-dialog>
   </v-card>
-</v-container>
 </div>
 </template>
 
@@ -265,3 +262,27 @@ export default {
     }
 } 
 </script>
+<style>
+.v-data-table th[role="columnheader"] {
+  white-space: nowrap;
+  background-color: var(--v-background-lighten1) !important;
+}
+.td p {
+ margin-bottom: 0;
+} 
+
+.toolbar {
+  background-color: var(--v-background-lighten1) !important;
+}
+.divider-right {
+  float: right;
+}
+.divider-left {
+  float: left;
+}
+.table-header th {
+  background-color: var(--v-background-lighten1) !important;
+  padding: 0 !important;
+  color: gray;
+}
+</style>

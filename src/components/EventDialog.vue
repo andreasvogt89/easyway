@@ -1,7 +1,7 @@
 <template>
     <v-card
        color="secondary">
-        <v-card-title>Neues Event</v-card-title>
+        <v-card-title>{{toEdit ? "Event bearbeiten" : "Neues Event"}}</v-card-title>
         <v-form>
           <v-select
             class="ma-3"

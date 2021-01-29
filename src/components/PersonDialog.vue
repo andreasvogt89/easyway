@@ -2,7 +2,7 @@
     <v-card
        color="secondary pa-3"
        >
-        <v-card-title>Neue Lappe</v-card-title>
+        <v-card-title>{{toEdit ? "Lappe" : "Neue Lappe"}}</v-card-title>
         <v-form>
             <v-row>
             <v-col cols="12" sm="6">
