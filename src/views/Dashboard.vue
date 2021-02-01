@@ -134,6 +134,21 @@
     <v-card-title >
       Export
     </v-card-title>
+      <v-row class="ma-2 justify-center"> 
+        <v-col 
+        v-bind:key="year.value" 
+        v-for="year in years"
+         class="d-flex justify-center"
+        >
+          <v-switch
+              v-model="year.selected"
+              color="accent"
+              :label="year.value"
+              :value="year.selected"
+              hide-details
+            ></v-switch>
+        </v-col>
+      </v-row>
       <v-row
       class="ma-2"
       >
@@ -152,7 +167,7 @@
         >
         </v-combobox>
         </v-col>
-        </v-row>
+      </v-row>
        <v-row>
          <v-col cols=12 sm="12">
             <div class="justify-center">
@@ -167,6 +182,24 @@
             </div>
          </v-col>    
       </v-row>
+       <v-alert
+      class="ma-2"
+      v-if="error != ''"
+      text
+      prominent
+      type="error"
+      icon="mdi-cloud-alert"
+    >
+     {{error}}
+       <v-btn
+            color="error"
+            class="ma-3"
+            outlined
+            @click="error = ''"
+          >
+            Okay
+          </v-btn>
+    </v-alert>
   </v-card>
   
 </v-container> 
@@ -181,12 +214,25 @@ export default {
      data () {
       return {
         selectedEvents: [],
+        years: [],
+        error: ""
       }
      },
     async created(){
       await this.$store.dispatch('fetchEvents');
       await this.$store.dispatch('fetchPersons');
-      
+        this.$store.getters.getEvents.forEach(item=>{
+            let year = new Date(item.event.eventDate).getFullYear().toString();
+            if(this.years.filter(item => item.value === year).length === 0){
+            this.years.push(
+                { 
+                value: year,
+                selected: false,
+                }
+              );
+            }
+        });
+        
     },
     methods:{
         async downloadExcel(){
@@ -194,12 +240,22 @@ export default {
         let newDate = new Date();
         moment.locale('de-ch'); 
         let fileName = "Statistik " + new moment(newDate).format('LL');
-        await REST_interface.createStatisticExcel(fileName, this.selectedEvents).then(()=>{
+        let selectedYears = [];
+        this.years.forEach(year => {
+          if(year.selected){
+            selectedYears.push(year.value);
+          }
+        });
+        if(selectedYears.length === 0 || this.selectedEvents.length === 0){
+          this.error = "Bitte Typ & Jahr uswähle.. 🙄"
+        } else {
+        await REST_interface.createStatisticExcel(fileName, this.selectedEvents, selectedYears).then(()=>{
           this.loading = false;
         }).catch(err=>{
           this.loading = false;
-          console.log(err);
-        })
+          this.error = err;
+        });
+        }
       },
     addDays(date, days) {
     let result = new Date(date);
@@ -254,7 +310,7 @@ export default {
             return ""
         }
             
-      }
+      },
     },
 
 }
