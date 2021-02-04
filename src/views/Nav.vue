@@ -1,10 +1,10 @@
 <template>
-    <v-card>
-      <v-overlay
+  <div>  
+    <v-overlay
+      :v-if="alertLogout"
       :value="alertLogout"
       :opacity="1"
     >
-    <v-container> 
     <v-card>
     <v-card-title 
     class="ma-5px"
@@ -26,15 +26,16 @@
       </v-btn>
       </v-card-text>
     </v-card>
-    </v-container>
-      </v-overlay>
-        <v-app-bar
+   </v-overlay>    
+    <v-app-bar
         dark
         fluid
         prominent>
         <v-toolbar-title>
         EASY WAY
         </v-toolbar-title>
+   
+    
         <v-spacer></v-spacer>
         <v-alert
         class="ma-2"
@@ -56,8 +57,8 @@
             <v-tab :to="{name: 'About'}" >About</v-tab>
             </v-tabs>
         </template>
-        </v-app-bar>
-    </v-card>
+    </v-app-bar>
+  </div>
 </template>
 <script>
 import axios from 'axios';

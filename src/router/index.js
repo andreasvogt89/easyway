@@ -1,11 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Dashboard from '../views/Dashboard.vue';
-import Events from '../views/Events.vue'
-import Login from '../views/Login.vue'
-import Calendar from '../views/Calendar.vue'
-import Persons from '../views/Persons.vue'
-import About from '../views/About.vue'
 
 Vue.use(VueRouter)
 
@@ -16,32 +10,38 @@ const routes = [{
     {
         path: '/dashboard',
         name: 'Dashboard',
-        component: Dashboard
+        component: () =>
+            import ('@/views/Dashboard.vue')
     },
     {
         path: '/events',
         name: 'Events',
-        component: Events
+        component: () =>
+            import ('@/views/Events.vue')
     },
     {
         path: '/login',
         name: 'Login',
-        component: Login
+        component: () =>
+            import ('@/views/Login.vue')
     },
     {
         path: '/persons',
         name: 'Persons',
-        component: Persons
+        component: () =>
+            import ('@/views/Persons.vue')
     },
     {
         path: '/calendar',
         name: 'Calendar',
-        component: Calendar
+        component: () =>
+            import ('@/views/Calendar.vue')
     },
     {
         path: '/about',
         name: 'About',
-        component: About
+        component: () =>
+            import ('@/views/About.vue')
     }
 ]
 

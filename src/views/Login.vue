@@ -2,7 +2,7 @@
   class="justify-center ma-10"
   >
   <v-card
-    height="95%"
+    height="100%"
     color="secondary"
     class="ma-10"
   >

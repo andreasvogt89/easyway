@@ -85,7 +85,7 @@ export default {
     async fetchGiphy(){
         await axios.get("https://api.giphy.com/v1/gifs/random",
         {params:{
-         api_key:'',
+         api_key:'J7c2smpvaMf7O7EA77rFuHGk8TNfCvgo',
         }
         }).then(res=>{
           console.log(res)

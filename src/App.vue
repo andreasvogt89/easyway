@@ -10,9 +10,10 @@
 
       </v-progress-circular>
     </v-overlay>
-    <Login v-if="!this.$store.getters.loginState" />
     <Nav v-if="this.$store.getters.loginState" />
-    <router-view v-if="this.$store.getters.loginState" />
+    <v-main>
+    <router-view />
+    </v-main>
     <v-footer
       v-if="this.$store.getters.loginState"
       color="secondary"
@@ -45,14 +46,12 @@
   </v-app>
 </template>
 <script>
-import Nav from "@/views/Nav.vue"
-import Login from "@/views/Login.vue"
+import Nav from "@/views/Nav.vue";
 
 export default {
   name: 'App',
   components: {
     Nav,
-    Login
   },
   data () {
       return {
@@ -85,6 +84,11 @@ export default {
 body{
   background-color: #181A1F;
 }
+
+* {
+  margin: 0;
+}
+
 .footerImage{
   height: 40px;
   width: 40px;
