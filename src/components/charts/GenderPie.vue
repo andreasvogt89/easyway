@@ -1,10 +1,14 @@
 <template>
   <div>
-    <v-card class="pa-2 primary" raised min-height="200">
-    <v-card-title>Erfasste Personen</v-card-title>
-    <v-card-subtitle>Total: {{this.$store.getters.getPersons.length}} (inkl. Dummys)</v-card-subtitle>    
+    <v-card class="pa-2 primary" raised>
+    <v-card-title class="text-h5" >Erfasste Personen</v-card-title>
+    <div
+    class="overline"
+    >Total: 
+    <strong class="accent--text">{{this.$store.getters.getPersons.length}}</strong> 
+    (inkl. Dummys)</div>    
     <div id="chart" class="ma-2">
-            <apexchart type="pie" width="480" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="pie" width="480" :options="chartOptions" :series="series"></apexchart>
     </div>
     </v-card>
  </div>

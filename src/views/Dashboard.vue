@@ -1,10 +1,10 @@
 <template>
    <v-container>
   <v-card
+  v-if="!loading"
   class='secondary'
-  v-if="this.$store.getters.getEvents.length > 0"
   >
-    <v-card-title class="blue-grey darken-4">
+    <v-card-title class="text-h4 blue-grey darken-4">
       Statistik
     </v-card-title>
     <LineChart
@@ -58,7 +58,7 @@
         </v-combobox>
         </v-col>
       </v-row>
-       <v-row>
+      <v-row>
          <v-col cols=12 sm="12">
             <div class="justify-center">
             <v-card-text>Export auswahl in Excel</v-card-text>
@@ -72,7 +72,7 @@
             </div>
          </v-col>    
       </v-row>
-       <v-alert
+      <v-alert
       class="ma-2"
       v-if="error != ''"
       text
@@ -91,7 +91,6 @@
           </v-btn>
     </v-alert>
   </v-card>
-  
 </v-container> 
 </template>
 
@@ -119,9 +118,9 @@ export default {
      },
      data () {
       return {
+        loading: false,
         selectedEvents: [],
         years: [],
-        avarageParticipants: [],
         lineChart:{
           serie1Data:[],
           serie1Name:"Besucher",
@@ -133,9 +132,10 @@ export default {
       }
      },
     async created(){
+      this.loading = true;
       await this.$store.dispatch('fetchEvents');
       await this.$store.dispatch('fetchPersons');
-        this.$store.getters.getEvents.forEach(item=>{
+      await this.$store.getters.getEvents.forEach(item=>{
             let year = new Date(item.event.eventDate).getFullYear().toString();
             if(this.years.filter(item => item.value === year).length === 0){
             this.years.push(
@@ -147,6 +147,7 @@ export default {
             }
         });
       this.calculateChart();
+      this.loading = false;
     },
     methods:{
         async downloadExcel(){

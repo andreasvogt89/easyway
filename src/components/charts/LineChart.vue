@@ -1,14 +1,50 @@
 <template>
 <div>
-    <v-card v-if="this.$store.getters.getEvents.length > 0" class="pa-2 primary" raised>
-    <v-card-title>{{title}}</v-card-title>
-    <v-spacer></v-spacer>
-    <h2 class="">Anzahl erfasste Events: {{this.$store.getters.getEvents.length}}</h2>
-    <v-card-subtitle >Im durchschnitt kommen {{Math.round(serie1Data.reduce((a, b) => a + b) / serie1Data.length)}} leute pro Woche</v-card-subtitle>    
+  <v-card class="pa-2 primary" raised>
+    <v-card-title class="text-h5">{{title}}
+      <v-spacer></v-spacer>
+         <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <div
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-badge
+                class="ma-3"
+                color="accent"
+                :content="$store.getters.getEvents.length"
+                >
+              <v-icon>mdi-calendar-multiple</v-icon>
+              </v-badge>
+            </div>
+          </template>
+          <span>Erfasste Events</span>
+        </v-tooltip>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <div
+                v-bind="attrs"
+                v-on="on"
+            >
+              <v-badge
+                class="ma-3"
+                color="accent"
+                :content="getNumberOfVisitors"
+            >
+            <v-icon>mdi-account-multiple</v-icon>
+            </v-badge>
+            </div>
+          </template>
+          <span>Total Besucher</span>
+        </v-tooltip>
+    </v-card-title>
+        <div v-if="serie1Data.length > 0" class="overline">
+          Im durchschnitt kommen <strong class="accent--text">{{Math.round(serie1Data.reduce((a, b) => a + b) / serie1Data.length)}}</strong> lappen pro Woche
+        </div>
     <div id="chart" class="ma-2">
-            <apexchart type="area" height="350" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="area" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
-    </v-card>
+  </v-card>
  </div>
 </template>
 
@@ -85,5 +121,14 @@ export default {
           },
         }
     },
+    computed:{
+      getNumberOfVisitors(){
+        let numberOfVisitors = 0;
+        this.$store.getters.getEvents.forEach(event=>{
+          numberOfVisitors += event.event.participants.length
+        })
+        return numberOfVisitors
+      },
+    }
 }
 </script>

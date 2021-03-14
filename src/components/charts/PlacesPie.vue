@@ -1,8 +1,13 @@
 <template>
 <div>
     <v-card class="pa-2 primary" min-height="200" raised>
-    <v-card-title>Erfasste Personen per Ort</v-card-title>
-     <v-card-subtitle>Total: {{this.$store.getters.getPersons.length}} (inkl. Dummys)</v-card-subtitle> 
+    <v-card-title
+    class="text-h5">Erfasste Personen per Ort</v-card-title>
+    <div
+    class="overline"
+    >Total: 
+    <strong class="accent--text">{{this.$store.getters.getPersons.length}}</strong> 
+    (inkl. Dummys)</div>
     <div id="chart" class="ma-2">
             <apexchart type="donut" width="480" :options="chartOptions" :series="series"></apexchart>
     </div>
