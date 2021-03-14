@@ -45,7 +45,15 @@ export default new Vuex.Store({
             "Mobile Arbeit Bellach",
             "Kreativwerkstatt L'Dorf",
         ],
-
+        places: [
+            'Langendorf',
+            'Oberdorf',
+            'Bellach',
+            'Rüttenen',
+            'Solothurn',
+            'Bettlach',
+            'Andere',
+        ],
     },
     mutations: {
         setUser(state, data) {
@@ -182,6 +190,9 @@ export default new Vuex.Store({
         },
         getEventNames: state => {
             return state.eventNames
+        },
+        getPlaces: state => {
+            return state.places
         },
     },
 });

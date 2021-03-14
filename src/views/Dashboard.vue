@@ -2,134 +2,24 @@
    <v-container>
   <v-card
   class='secondary'
+  v-if="this.$store.getters.getEvents.length > 0"
   >
     <v-card-title class="blue-grey darken-4">
       Statistik
     </v-card-title>
-  <v-row class="ma-1">
-    <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.length"
-       >
-       <v-icon>mdi-account-multiple</v-icon>
-       </v-badge>
-       <p>Personen</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item => item.person.gender === 'W').length"
-       >
-       <v-icon>mdi-face-woman</v-icon>
-       </v-badge>
-       <p>Frauen</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item => item.person.gender === 'M').length"
-       >
-       <v-icon>mdi-face</v-icon>
-       </v-badge>
-       <p>Männer</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getEvents.length"
-       >
-       <v-icon>mdi-calendar-multiple</v-icon>
-       </v-badge>
-       <p>Events</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="avarageAge"
-       >
-       <v-icon>mdi-account</v-icon>
-       </v-badge>
-       <p>∅ Alter</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="avaragePartiPerWeek"
-       >
-       <v-icon>mdi-chart-line</v-icon>
-       </v-badge>
-       <p>∅ B/W </p>
-      </v-col>
-  </v-row>
-  <v-row class="ma-1">
-    <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Langendorf').length"
-       >
-       <v-icon>mdi-counter</v-icon>
-       </v-badge>
-       <p>Langendorf</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Oberdorf').length"
-       >
-       <v-icon>mdi-counter</v-icon>
-       </v-badge>
-       <p>Oberdorf</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Bellach').length"
-       >
-       <v-icon>mdi-counter</v-icon>
-       </v-badge>
-       <p>Bellach</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Rüttenen').length"
-       >
-       <v-icon>mdi-counter</v-icon>
-       </v-badge>
-       <p>Rüttenen</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Solothurn').length"
-       >
-       <v-icon>mdi-counter</v-icon>
-       </v-badge>
-       <p>Solothurn</p>
-      </v-col>
-      <v-col cols=12 sm="2">
-       <v-badge
-          class="ma-3"
-          color="accent"
-          :content="this.$store.getters.getPersons.filter(item=> item.person.city === 'Bettlach').length"
-       >
-       <v-icon>mdi-counter</v-icon>
-       </v-badge>
-       <p>Bettlach</p>
-      </v-col>
-  </v-row>
+    <LineChart
+      class="ma-2"
+     :title="`Besucher pro Woche über alle Events`"
+     :categories="lineChart.categories"
+     :serie1Data="lineChart.serie1Data"
+     :serie1Name="lineChart.serie1Name"
+     :serie2Data="lineChart.serie2Data"
+     :serie2Name="lineChart.serie2Name"
+     />
+     <v-row>
+       <v-col><GenderPie class="ma-2" /></v-col>
+       <v-col><PlacesPie class="ma-2" /></v-col>
+     </v-row> 
   <v-divider class="mx-4"></v-divider>
     <v-card-title >
       Export
@@ -208,13 +98,37 @@
 <script>
 import REST_interface from "@/REST_interface";
 import moment from "moment";
+import LineChart from "@/components/charts/LineChart.vue";
+import GenderPie from "@/components/charts/GenderPie.vue";
+import PlacesPie from "@/components/charts/PlacesPie.vue";
+
+Date.prototype.getWeekNumber = function(){
+  var d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()));
+  var dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+};
 
 export default {
      name:"Dashboard",
+     components:{
+       LineChart,
+       GenderPie,
+       PlacesPie,
+     },
      data () {
       return {
         selectedEvents: [],
         years: [],
+        avarageParticipants: [],
+        lineChart:{
+          serie1Data:[],
+          serie1Name:"Besucher",
+          serie2Data:[],
+          serie2Name:"Events",
+          categories:[],
+        },
         error: ""
       }
      },
@@ -232,7 +146,7 @@ export default {
               );
             }
         });
-        
+      this.calculateChart();
     },
     methods:{
         async downloadExcel(){
@@ -269,6 +183,33 @@ export default {
         diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
     return new Date(d.setDate(diff));
     },
+    getAvarageAge(persons){
+      let ages = [];
+      persons.forEach(item=>{
+            if(item.person.age !== undefined){
+                ages.push(item.person.age)
+            }
+        });
+        if(ages.length > 2){
+            return Math.round(ages.reduce((a, b) => a + b) / ages.length)
+        } else return ""
+    },
+    calculateChart() {
+        let firstEvent = this.$store.getters.getEvents.slice().sort((a, b) => b.event.eventDate - a.event.eventDate);
+        for (let i = this.getMonday(firstEvent[0].event.eventDate); i <= new Date(); i = this.addDays(i, 7)) {
+            let currentEvents = firstEvent.filter(item =>
+                (new Date(item.event.eventDate).getTime() >= i.getTime() &&
+                    new Date(item.event.eventDate).getTime() < this.addDays(i, 7).getTime()));
+            let week = 0;
+            currentEvents.forEach(item=>{
+              week = week + item.event.participants.length;
+            
+            });
+            this.lineChart.serie2Data.push(currentEvents.length);
+            this.lineChart.serie1Data.push(week);
+            this.lineChart.categories.push(`KW ${i.getWeekNumber()} ${i.getFullYear()}`);
+        }
+      }
     },
     computed: {
       eventNames () {
@@ -278,39 +219,6 @@ export default {
         });
         return eventNames
         },
-      avarageAge(){
-        let ages = []; 
-        this.$store.getters.getPersons.forEach(item=>{
-            if(item.person.age !== undefined){
-                ages.push(item.person.age)
-            }
-        });
-        if(ages.length > 2){
-            return Math.round(ages.reduce((a, b) => a + b) / ages.length)
-        }
-            return ""
-      },
-      avaragePartiPerWeek(){
-        if(this.$store.getters.getEvents.length > 1){
-        let firstEvent = this.$store.getters.getEvents.slice().sort((a, b) => b.event.eventDate - a.event.eventDate);
-        let weeks = [];
-        for (let i = this.getMonday(firstEvent[0].event.eventDate); i <= new Date(); i = this.addDays(i, 7)) {
-            let currentEvents = firstEvent.filter(item =>
-                (new Date(item.event.eventDate).getTime() >= i.getTime() &&
-                    new Date(item.event.eventDate).getTime() < this.addDays(i, 7).getTime()));
-        
-            let week = 0;
-            currentEvents.forEach(item=>{
-              week = week + item.event.participants.length
-            });
-            weeks.push(week);
-          }
-            return Math.round(weeks.reduce((a, b) => a + b) / weeks.length)
-        } else {
-            return ""
-        }
-            
-      },
     },
 
 }
