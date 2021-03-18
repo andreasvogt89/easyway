@@ -60,9 +60,9 @@
               dark
               v-if="!event_view"
               class="ma-2"
-              @click="downloadExcel()"
+              @click="dialogPersonsExport = true"
             >
-               <v-icon>mdi-file-excel-outline</v-icon>
+               Exporte
       </v-btn>
       </v-toolbar>
     </template>
@@ -125,6 +125,15 @@
           @close-dialog=" dialogDeletePerson = false"
         />
     </v-dialog>
+    <v-dialog
+          v-model="dialogPersonsExport"
+          v-if="dialogPersonsExport"
+          persistent
+        >
+        <PersonExports
+          @close-dialog=" dialogPersonsExport = false"
+        />
+    </v-dialog>
   </v-card>
 </div>
 </template>
@@ -133,6 +142,7 @@
 import DeleteItemDialog from "@/components/DeleteItemDialog.vue";
 import PersonDialog from "@/components/PersonDialog.vue";
 import AddPerson from "@/components/AddPerson.vue";
+import PersonExports from "@/components/PersonExports";
 import moment from "moment";
 import REST_interface from "@/REST_interface";
 
@@ -150,6 +160,7 @@ export default {
         dialogPersonActive: false,
         dialogAddPersonActiv: false,
         dialogDeletePerson: false,
+        dialogPersonsExport:false,
         delete_ID: "",
         edit: false,
         event_item: this.eventItem,
@@ -177,7 +188,8 @@ export default {
     components:{
       PersonDialog,
       DeleteItemDialog,
-      AddPerson
+      AddPerson,
+      PersonExports
     },
     created() {
       this.initialize();

@@ -1,87 +1,102 @@
 <template>
-    <div>
-        <v-card>
-        <v-card-title >
-        Export
-        </v-card-title>
-        <v-row class="ma-2 justify-center"> 
-            <v-col 
-            v-bind:key="year.value" 
-            v-for="year in years"
-            class="d-flex justify-center"
+        <v-card class="secondary">
+            <v-card-title>
+            Export Personen per Eventtypen
+            <v-spacer></v-spacer>
+            <v-btn
+                @click="closeDialog()"
+                elevation="2"
             >
-            <v-switch
-                v-model="year.selected"
+            <v-icon large>mdi-close</v-icon>
+            </v-btn>
+            </v-card-title>
+                <v-combobox
+                class="ma-2"
+                item-color="accent"
+                outlined
+                light
+                chips
+                deletable-chips
                 color="accent"
-                :label="year.value"
-                :value="year.selected"
-                hide-details
-                ></v-switch>
-            </v-col>
-        </v-row>
-        <v-row
-        class="ma-2"
-        >
-            <v-col cols=12 sm=12>
-            <v-combobox
-            item-color="accent"
-            outlined
-            light
-            chips
-            deletable-chips
-            color="accent"
-            v-model="selectedEvents"
-            :items="eventNames"
-            label="Eventtypen"
-            multiple
-            >
-            </v-combobox>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols=12 sm="12">
-                <div class="justify-center">
+                v-model="selectedEvents"
+                :items="eventNames"
+                label="Eventtypen"
+                multiple
+                >
+                </v-combobox>
                 <v-card-text>Export auswahl in Excel</v-card-text>
                 <v-btn
+                class="ma-2"
                 x-large
-                :disabled="selectedEvents < 0"
-                @click="downloadExcel()"
+                :disabled="selectedEvents.length < 0"
+                @click="downloadExcel"
                 >
                 <v-icon>mdi-file-excel-outline</v-icon>  
                 </v-btn>
-                </div>
-            </v-col>    
-        </v-row>
-        <v-alert
-        class="ma-2"
-        v-if="error != ''"
-        text
-        prominent
-        type="error"
-        icon="mdi-cloud-alert"
-        >
-        {{error}}
-        <v-btn
-                color="error"
-                class="ma-3"
-                outlined
-                @click="error = ''"
-            >
-                Okay
-            </v-btn>
-        </v-alert>
+                <v-alert
+                class="ma-2"
+                v-if="error != ''"
+                text
+                prominent
+                type="error"
+                icon="mdi-cloud-alert"
+                >
+                {{error}}
+                <v-btn
+                        color="error"
+                        class="ma-3"
+                        outlined
+                        @click="error = ''"
+                    >
+                        Okay
+                    </v-btn>
+                </v-alert>
     </v-card>
-    </div>
 </template>
 
 <script>
+import REST_interface from "@/REST_interface";
+import moment from "moment";
+
 export default {
     name: "PersonExport",
     data() {
         return {
             error:"",
             selectedEvents: [],
+            loading: false,
         }
-    }
+    },
+    computed: {
+      eventNames() {
+        let eventNames = []; 
+        this.$store.getters.getEvents.forEach(item=>{
+            eventNames.push(item.event.name)
+        });
+        return eventNames
+        },
+    },
+    methods:{
+        closeDialog(){
+        this.$emit('close-dialog');
+    },
+    async downloadExcel(){
+        this.loading = true;
+        let newDate = new Date();
+        moment.locale('de-ch'); 
+        let fileName = "Personen " + new moment(newDate).format('LL');
+        if(this.selectedEvents.length === 0){
+          this.error = "Bitte Typ uswähle.. 🙄";
+        } else {
+        await REST_interface.createPersonExcel(fileName, this.selectedEvents).then(()=>{
+          this.loading = false;
+        }).catch(err=>{
+          this.loading = false;
+          this.error = err;
+        });
+        }
+     }
+    
+    },
 }
 </script>
