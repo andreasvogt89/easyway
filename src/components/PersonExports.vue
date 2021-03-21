@@ -82,12 +82,19 @@ export default {
     },
     async downloadExcel(){
         this.loading = true;
-        let newDate = new Date();
-        moment.locale('de-ch'); 
-        let fileName = "Personen " + new moment(newDate).format('LL');
         if(this.selectedEvents.length === 0){
           this.error = "Bitte Typ uswähle.. 🙄";
         } else {
+            let fileName = `Personen stand ${new moment(newDate).format('LL')} von: `;
+            let newDate = new Date();
+            moment.locale('de-ch');
+            this.selectedEvents.forEach((name, i) => {
+                if (i === 0) {
+                    fileName = fileName + ` ${name}`
+                } else {
+                    fileName = fileName + ` & ${name}`
+                }
+            }); 
         await REST_interface.createPersonExcel(fileName, this.selectedEvents).then(()=>{
           this.loading = false;
         }).catch(err=>{

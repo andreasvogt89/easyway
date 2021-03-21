@@ -108,9 +108,11 @@ class REST_interface {
     }
 
     // Get Excel sheet for all Persons
-    static createPersonExcel(fileName) {
+    static createPersonExcel(fileName, eventNames) {
         return new Promise(((resolve, reject) =>
-            axios.get(host + '/export/excel/persons', {
+            axios.post(host + '/export/excel/persons', {
+                eventNames,
+            }, {
                 responseType: 'arraybuffer',
                 headers: {
                     'filename': fileName,
