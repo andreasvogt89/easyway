@@ -55,6 +55,7 @@
         elevation="2"
         class="ma-2"
         :loading="dialogSave"
+        :disabled="dialogSave"
         @click="saveEvent()"
       >
       <v-icon large>mdi-check</v-icon>

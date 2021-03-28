@@ -52,6 +52,8 @@ export default new Vuex.Store({
             'Rüttenen',
             'Solothurn',
             'Bettlach',
+            'Selzach',
+            'Lommiswil',
             'Andere',
         ],
     },

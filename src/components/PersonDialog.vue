@@ -30,7 +30,6 @@
                     v-model="pickerDate"
                     outlined
                     label="Geburtstag DD.MM.JJJJ"
-                    required
                 ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
@@ -143,6 +142,7 @@
         elevation="2"
         class="ma-2"
         :loading="dialogSave"
+        :disabled="dialogSave"
         @click="savePerson()"
       >
       <v-icon large>mdi-check</v-icon>
@@ -208,10 +208,6 @@ export default {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return pattern.test(value) || 'Mail adresse bitte'
           },
-          birthday: value => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(value) || 'Mail adresse bitte'
-          },
         },
 
       }
@@ -249,7 +245,7 @@ export default {
     },
     async savePerson(){
         this.dialogSave = true;
-        if(this.pickerDate !== null){
+        if(this.pickerDate !== null && this.pickerDate !== ""){
             try {
             this.person.birthdate = this.reverseParseDate(this.pickerDate);
             } catch(err){
