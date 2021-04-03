@@ -112,7 +112,7 @@
           persistent
         >
         <AddPerson
-        :eventItem="event_item"
+        :event_id="event_item._id"
         @close-dialog="dialogAddPersonActiv = false" />   
     </v-dialog>
     <v-dialog

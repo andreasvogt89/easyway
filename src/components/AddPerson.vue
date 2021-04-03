@@ -1,6 +1,7 @@
 <template>
   <v-card
   class="secondary"
+  v-if="event"
   >
     <v-card-title>
       <v-text-field
@@ -75,11 +76,12 @@ export default {
     
     name:'AddPerson',
     props:{
-        eventItem:Object,
+        event_id:String,
     },
      data () {
       return {
-            event: this.eventItem,
+            event: null,
+            eventId: this.event_id,
             search: '',
             error: false,
             dialogSave: false,
@@ -101,6 +103,9 @@ export default {
           item => (item.person.firstname !== '#DUMMY'
           && !this.event.event.participants.includes(item._id))
           )}
+    },
+    async mounted(){
+      this.event = this.$store.getters.getEvents.filter(eventItem=>eventItem._id == this.eventId)[0];
     },
     methods:{
         closeDialog(){
