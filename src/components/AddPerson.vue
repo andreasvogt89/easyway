@@ -94,6 +94,7 @@ export default {
           { text: 'Geschlecht', value: 'person.gender' },
           { text: 'Alter', value: 'person.age' },
           { text: 'Geburtstag', value: 'person.birthdate' },
+          { text: 'Ort', value: 'person.city' },
         ],
         }
     },
