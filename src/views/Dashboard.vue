@@ -16,7 +16,7 @@
      :serie2Data="lineChart.serie2Data"
      :serie2Name="lineChart.serie2Name"
      />
-     <v-row>
+     <v-row justify="center">
        <v-col><GenderPie class="ma-2" /></v-col>
        <v-col><PlacesPie class="ma-2" /></v-col>
      </v-row> 

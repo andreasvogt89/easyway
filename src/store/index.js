@@ -102,9 +102,16 @@ export default new Vuex.Store({
         },
 
         async reLogin({ commit, dispatch }, data) {
-            commit('setUser', data);
-            commit('setExpiresAt', data.expiresAt);
-            dispatch('setLogoutTimer', data.expiresAt);
+            let distance = new Date(data.expiresAt).getTime() -
+                new Date().getTime();
+            if (distance < 0) {
+                commit('removeUser');
+                localStorage.removeItem('user');
+            } else {
+                commit('setUser', data);
+                commit('setExpiresAt', data.expiresAt);
+                dispatch('setLogoutTimer', data.expiresAt);
+            }
         },
 
         logout({ commit }) {
