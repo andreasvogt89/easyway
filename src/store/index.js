@@ -23,6 +23,7 @@ export default new Vuex.Store({
         eventNames: [
             "Jugendtreff L'Dorf",
             "Jugendtreff L'Dorf Kids",
+            "Jugendtreff Bellach",
             "Summerlounge L'Dorf",
             "Summerlounge Rüttenen",
             "Summerlounge Oberdorf",
