@@ -85,7 +85,7 @@
       {{parseDate(item.person.birthdate)}}
     </template>
     <template v-slot:[`item.person.gender`]="{ item }">
-      <v-icon>{{item.person.gender === 'W' ? 'mdi-face-woman': 'mdi-face'}}</v-icon>
+      <v-icon>{{item.person.gender === 'W' ? 'mdi-face-woman': 'mdi-face-man'}}</v-icon>
     </template>
     <template v-slot:no-data>
       <v-alert

@@ -54,7 +54,7 @@
           @click="person.gender = 'M'"
            :color="person.gender === 'M' ? 'accent' : 'primary'"
           class="ma-3" >
-            <v-icon>mdi-face</v-icon>
+            <v-icon>mdi-face-man</v-icon>
           </v-btn>
           </div>
           <v-row>
